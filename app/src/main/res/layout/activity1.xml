@@ -2,46 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#8bb1ed"
     android:baselineAligned="false">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_margin="10dp"
-        android:background="#f0ffff"
-        android:orientation="vertical">
+        android:background="#ffffff"
+        android:elevation="5dp"
+        app:cardCornerRadius="20dp">
 
         <Button
             android:id="@+id/codeforces"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
             android:background="@drawable/codeforces"
+            android:onClick="onClick"
+            android:tag="1"
              />
-    </LinearLayout>
+    </android.support.v7.widget.CardView>
 
 
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:background="#f0ffff"
-        android:orientation="vertical">
+        android:background="#ffffff"
+        android:elevation="5dp"
+        app:cardCornerRadius="20dp">
         <Button
             android:id="@+id/hackerearth"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/hackerearth"
+            android:onClick="onClick"
+            android:tag="2"
             />
-    </LinearLayout>
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>
