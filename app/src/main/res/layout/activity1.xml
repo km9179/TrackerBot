@@ -19,7 +19,6 @@
             android:id="@+id/codeforces"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="@drawable/codeforces"
             android:onClick="onClick"
             android:tag="1"
              />
