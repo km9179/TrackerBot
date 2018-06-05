@@ -20,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:onClick="onClick"
+            android:background="@drawable/codeforces"
             android:tag="1"
              />
     </android.support.v7.widget.CardView>
@@ -37,6 +38,7 @@
         <Button
             android:id="@+id/hackerearth"
             android:layout_width="match_parent"
+            android:background="@drawable/hackerearth"
             android:layout_height="100dp"
             android:onClick="onClick"
             android:tag="2"
