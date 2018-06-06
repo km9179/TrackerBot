@@ -32,7 +32,7 @@ public class CF_Options extends android.app.DialogFragment implements View.OnCli
 
     @Override
     public void onClick(View view) {
-        Intent intent=new Intent(getActivity(),Activity2.class);
+        Intent intent=new Intent(getActivity(),ContestListActivity.class);
         startActivity(intent);
     }
 }
