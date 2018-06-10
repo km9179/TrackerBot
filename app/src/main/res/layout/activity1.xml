@@ -1,48 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#8bb1ed"
-    android:baselineAligned="false">
+    android:fitsSystemWindows="true">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_margin="10dp"
-        android:background="#ffffff"
-        android:elevation="5dp"
-        app:cardCornerRadius="20dp">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="#8bb1ed"
+        android:orientation="vertical"
+        android:baselineAligned="false">
 
-        <Button
-            android:id="@+id/codeforces"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:onClick="onClick"
-            android:background="@drawable/codeforces"
-            android:tag="1"
-             />
-    </android.support.v7.widget.CardView>
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
 
-
-    <android.support.v7.widget.CardView
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="#ffffff"
-        android:elevation="5dp"
-        app:cardCornerRadius="20dp">
-        <Button
-            android:id="@+id/hackerearth"
+        <!-- Layout to contain contents of main body of screen (drawer will slide over this) -->
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:background="@drawable/hackerearth"
-            android:layout_height="100dp"
-            android:onClick="onClick"
-            android:tag="2"
-            />
-    </android.support.v7.widget.CardView>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="#0aa0aa"
+            android:baselineAligned="false">
 
-</LinearLayout>
+            <android.support.v7.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:background="#ffffff"
+                android:elevation="5dp"
+                android:layout_gravity="bottom"
+                app:cardCornerRadius="20dp">
+
+                <Button
+                    android:id="@+id/codeforces"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:onClick="onClick"
+                    android:background="@drawable/codeforces"
+                    android:tag="1"
+                    />
+            </android.support.v7.widget.CardView>
+
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="#ffffff"
+                android:elevation="5dp"
+                app:cardCornerRadius="20dp">
+                <Button
+                    android:id="@+id/topcoder"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/topcoder"
+                    android:layout_height="100dp"
+                    android:onClick="onClick"
+                    android:tag="2"
+                    />
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+
+
+
+
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="#0aa0aa"
+            android:orientation="vertical"
+            android:baselineAligned="false">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_marginBottom="0dp"
+                android:layout_gravity="center_horizontal"
+                android:background="#ffffff"
+                android:elevation="5dp"
+                app:cardCornerRadius="20dp">
+
+                <Button
+                    android:id="@+id/hackerearth"
+                    android:layout_width="match_parent"
+                    android:layout_height="187dp"
+                    android:background="@drawable/hackerearth"
+                    android:onClick="onClick"
+                    android:tag="3" />
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+
+
+
+
+
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="#0aa0aa"
+            android:baselineAligned="false">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:background="#ffffff"
+                android:elevation="5dp"
+                android:layout_gravity="bottom"
+                app:cardCornerRadius="20dp">
+
+                <Button
+                    android:id="@+id/hackerraank"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:onClick="onClick"
+                    android:background="@drawable/hackerrank"
+                    android:tag="4"
+                    />
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="#ffffff"
+                android:elevation="5dp"
+                app:cardCornerRadius="20dp">
+                <Button
+                    android:id="@+id/Codechef"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/codechef"
+                    android:layout_height="100dp"
+                    android:onClick="onClick"
+                    android:tag="5"
+                    />
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+    </LinearLayout>
+    <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        android:background="#119199"
+        app:menu="@menu/drawer_view"
+        android:checkableBehavior="single"
+        app:headerLayout="@layout/nav_header"/>
+
+
+</android.support.v4.widget.DrawerLayout>

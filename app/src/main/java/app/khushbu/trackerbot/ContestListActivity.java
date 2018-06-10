@@ -68,7 +68,7 @@ public class ContestListActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });*/
-        RequestQueue requestQueue= Volley.newRequestQueue(this);
+       RequestQueue requestQueue= Volley.newRequestQueue(this);
         DownloadClass downloadClass=new DownloadClass();
         downloadClass.downloadTask(requestQueue);
 
