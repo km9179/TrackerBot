@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/app_bar_x">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="#8bb1ed"
+        android:orientation="vertical"
+        android:baselineAligned="false">
+
+
+
+
+        <!-- Layout to contain contents of main body of screen  -->
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="#0aa0aa"
+            android:baselineAligned="false">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:background="#ffffff"
+                android:elevation="5dp"
+                android:layout_gravity="bottom"
+                app:cardCornerRadius="20dp">
+
+                <Button
+                    android:id="@+id/codeforces"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:onClick="onClick"
+                    android:background="@drawable/codeforces"
+                    android:tag="1"
+                    />
+            </android.support.v7.widget.CardView>
+
+
+
+            <android.support.v7.widget.CardView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="#ffffff"
+                android:elevation="5dp"
+                app:cardCornerRadius="20dp">
+                <Button
+                    android:id="@+id/topcoder"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/topcoder"
+                    android:layout_height="100dp"
+                    android:onClick="onClick"
+                    android:tag="12"
+                    />
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+
+
+
+
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="#0aa0aa"
+            android:orientation="vertical"
+            android:baselineAligned="false">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_marginBottom="0dp"
+                android:layout_gravity="center_horizontal"
+                android:background="#ffffff"
+                android:elevation="5dp"
+                app:cardCornerRadius="20dp">
+
+                <Button
+                    android:id="@+id/hackerearth"
+                    android:layout_width="match_parent"
+                    android:layout_height="187dp"
+                    android:background="@drawable/hackerearth"
+                    android:onClick="onClick"
+                    android:tag="73" />
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:background="#0aa0aa"
+            android:baselineAligned="false">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="10dp"
+                android:background="#ffffff"
+                android:elevation="5dp"
+                android:layout_gravity="bottom"
+                app:cardCornerRadius="20dp">
+
+                <Button
+                    android:id="@+id/hackerraank"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:onClick="onClick"
+                    android:background="@drawable/hackerrank"
+                    android:tag="63"
+                    />
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="#ffffff"
+                android:elevation="5dp"
+                app:cardCornerRadius="20dp">
+                <Button
+                    android:id="@+id/Codechef"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/codechef"
+                    android:layout_height="100dp"
+                    android:onClick="onClick"
+                    android:tag="2"
+                    />
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>
