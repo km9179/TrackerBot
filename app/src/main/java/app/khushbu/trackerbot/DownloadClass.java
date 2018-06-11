@@ -52,15 +52,15 @@ public class DownloadClass {
     }
     public void downloadTask(RequestQueue requestQueue){
 
-
-
+        //to clear the screen
+        clear();
         //this.formUrl(2);
         //Log.i("url2",this.url);
         JsonObjectRequest objectRequest=new JsonObjectRequest(Request.Method.GET, this.url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    clear();
+
                     JSONArray jsonArray=response.getJSONArray("objects");
 
                     for(int i=0;i<jsonArray.length();i++) {
