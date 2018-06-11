@@ -24,7 +24,9 @@ public class DownloadClass {
     public void formUrl(int id){
 
         String url_left="https://clist.by/api/v1/json/contest/?username=abhi&api_key=8f62bf40d07bb9af09535a22f21653ace0da43a4&resource__id=";
-        String resource_id=Integer.toString(id);
+        String resource_id="1";
+        if(id != -1);
+            resource_id=Integer.toString(id);
         String url_right="&order_by=-start";
         String url=url_left+resource_id+url_right;
         this.url=url;
@@ -52,7 +54,7 @@ public class DownloadClass {
 
 
 
-        this.formUrl(2);
+        //this.formUrl(2);
         //Log.i("url2",this.url);
         JsonObjectRequest objectRequest=new JsonObjectRequest(Request.Method.GET, this.url, null, new Response.Listener<JSONObject>() {
             @Override

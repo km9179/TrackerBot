@@ -1,5 +1,6 @@
 package app.khushbu.trackerbot;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -68,8 +69,12 @@ public class ContestListActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });*/
+
+        Intent intent=getIntent();
+
        RequestQueue requestQueue= Volley.newRequestQueue(this);
         DownloadClass downloadClass=new DownloadClass();
+        downloadClass.formUrl(intent.getIntExtra("id",-1));
         downloadClass.downloadTask(requestQueue);
 
     }
