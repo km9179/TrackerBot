@@ -39,6 +39,7 @@ public class ContestListActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    public static int siteKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +73,10 @@ public class ContestListActivity extends AppCompatActivity {
 
         Intent intent=getIntent();
 
-       RequestQueue requestQueue= Volley.newRequestQueue(this);
+        RequestQueue requestQueue= Volley.newRequestQueue(this);
         DownloadClass downloadClass=new DownloadClass();
-        downloadClass.formUrl(intent.getIntExtra("id",-1));
+        siteKey=intent.getIntExtra("id",-1);
+        downloadClass.formUrl(siteKey);
         downloadClass.downloadTask(requestQueue);
 
     }
