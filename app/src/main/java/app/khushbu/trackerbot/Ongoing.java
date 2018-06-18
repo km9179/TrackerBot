@@ -56,7 +56,9 @@ public class Ongoing extends Fragment{
             public void onRefresh() {
                 RequestQueue requestQueue= Volley.newRequestQueue(rootView.getContext());
                 DownloadClass downloadClass=new DownloadClass();
-                downloadClass.downloadTask(requestQueue);
+                downloadClass.formUrl(ContestListActivity.siteKey);
+                downloadClass.downloadTask(requestQueue,1);
+                adapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
         });

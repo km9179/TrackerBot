@@ -76,8 +76,8 @@ public class ContestListActivity extends AppCompatActivity {
         RequestQueue requestQueue= Volley.newRequestQueue(this);
         DownloadClass downloadClass=new DownloadClass();
         siteKey=intent.getIntExtra("id",-1);
-        downloadClass.formUrl(siteKey);
-        downloadClass.downloadTask(requestQueue);
+        downloadClass.downloadTask(requestQueue,1);
+        downloadClass.downloadTask(requestQueue,2);
 
     }
 
