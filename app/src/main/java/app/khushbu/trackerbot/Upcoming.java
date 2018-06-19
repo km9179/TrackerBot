@@ -1,32 +1,42 @@
 package app.khushbu.trackerbot;
 
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
 
-public class Upcoming extends Fragment {
+public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickListener {
 
-    public static ArrayList<String> event_names=new ArrayList<>();
-    public static ArrayList<String>event_url=new ArrayList<>();
-    public static ArrayList<String>event_start_time=new ArrayList<>();
-    public static ArrayList<String>event_end_time=new ArrayList<>();
-    public static ArrayList<Integer>event_duration=new ArrayList<>();
+
+    public static ArrayList<ContestData> upcomingContestData=new ArrayList<>();
+    public static ArrayList<ContestData> selectedContest = new ArrayList<>();
+    static int counter=0;
     public static RecyclerViewAdapter adapter;
+    static SwipeRefreshLayout swipeRefreshLayout;
+    static boolean is_in_actionMode=false;
 
-
+    ContestListActivity activity;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,9 +51,13 @@ public class Upcoming extends Fragment {
         adapter=new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,event_names);
         listView.setAdapter(adapter);*/
 
+        //toolbar=(Toolbar)((AppCompatActivity)getActivity()).getSupportActionBar().getCustomView().findViewById(R.id.toolbar);
+        //textToolbar=(TextView)toolbar.findViewById(R.id.toolbarText);
         RecyclerView recyclerView=(RecyclerView)rootView.findViewById(R.id.upcomingRecyclerView);
         adapter=new RecyclerViewAdapter(getActivity(),2);
         recyclerView.setAdapter(adapter);
+        adapter.setClickListener(this);
+        activity=(ContestListActivity)getActivity();
 
         LinearLayoutManager llm=new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
@@ -51,20 +65,120 @@ public class Upcoming extends Fragment {
 
         //for refreshing the whole contest list activity on pull
 
-        final SwipeRefreshLayout swipeRefreshLayout=(SwipeRefreshLayout)rootView.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout=(SwipeRefreshLayout)rootView.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                RequestQueue requestQueue= Volley.newRequestQueue(rootView.getContext());
-                DownloadClass downloadClass=new DownloadClass();
-                downloadClass.formUrl(ContestListActivity.siteKey);
-                downloadClass.downloadTask(requestQueue,2);
-                adapter.notifyDataSetChanged();
-                swipeRefreshLayout.setRefreshing(false);
+                if(is_in_actionMode)
+                    swipeRefreshLayout.setRefreshing(false);
+                else {
+
+                    RequestQueue requestQueue = Volley.newRequestQueue(rootView.getContext());
+                    DownloadClass downloadClass = new DownloadClass();
+                    downloadClass.formUrl(ContestListActivity.siteKey);
+                    downloadClass.downloadTask(requestQueue, 2);
+                    adapter.notifyDataSetChanged();
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
 
         return rootView;
     }
 
+    @Override
+    public void onLongClick(View view, int position) {
+
+        if(!is_in_actionMode) {
+            swipeRefreshLayout.setEnabled(false);
+            activity.changeMenu(1);
+            ContestListActivity.textToolbar.setVisibility(View.VISIBLE);
+            is_in_actionMode = true;
+            //adapter.notifyDataSetChanged();
+            activity.setLayoutScrollFlags(1);
+            CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
+            checkBox.setChecked(true);
+            counter += 1;
+            checkBox.setVisibility(View.VISIBLE);
+            selectedContest.add(upcomingContestData.get(position));
+            updateCounter(counter);
+        }
+    }
+
+    @Override
+    public void onClick(View view, int position) {
+        if(is_in_actionMode){
+            CheckBox checkBox=(CheckBox) view.findViewById(R.id.checkBox);
+            if(checkBox.isChecked()) {
+
+                checkBox.setChecked(false);
+                counter -= 1;
+                checkBox.setVisibility(View.GONE);
+                selectedContest.remove(upcomingContestData.get(position));
+
+                Log.i("t","t");
+            }
+            else{
+                checkBox.setChecked(true);
+                counter += 1;
+                checkBox.setVisibility(View.VISIBLE);
+                selectedContest.add(upcomingContestData.get(position));
+                Log.i("u","u");
+            }
+            updateCounter(counter);
+        }
+    }
+
+    public  void prepareSelection(View view, int position){
+        if(((CheckBox)view).isChecked()){
+            selectedContest.add(upcomingContestData.get(position));
+            counter += 1;
+
+        }
+        else{
+            selectedContest.remove(upcomingContestData.get(position));
+            counter -= 1;
+            ((CheckBox)view).setVisibility(View.GONE);
+        }
+        updateCounter(counter);
+
+    }
+
+    public void updateCounter(int counter){
+        if(counter==0) {
+            ContestListActivity.textToolbar.setText("0");
+        }
+        else
+            ContestListActivity.textToolbar.setText(Integer.toString(counter));
+    }
+
+
+
+    /*private class MyActionModeCallback implements ActionMode.Callback {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.menu_contest_list_action_mode,menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            is_in_actionMode=false;
+            adapter.notifyDataSetChanged();
+            myActionMode = null;
+
+        }
+
+
+    }*/
 }

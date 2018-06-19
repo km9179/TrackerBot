@@ -20,6 +20,9 @@ import android.view.View;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
 
     private DrawerLayout mDrawerLayout;
+
+
+
     //Button buttonCF;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

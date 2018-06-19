@@ -60,7 +60,7 @@ public class Time {
 
     }
 
-    public static String getCurrentTimeStamp() {
+    public String getCurrentTimeStamp() {
         SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm:ss");
         Date now = new Date();

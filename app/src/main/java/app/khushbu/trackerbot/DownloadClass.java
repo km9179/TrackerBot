@@ -40,18 +40,10 @@ public class DownloadClass {
     }
     public  void clear(int frag){
         if(frag==2) {
-            Upcoming.event_names.clear();
-            Upcoming.event_url.clear();
-            Upcoming.event_start_time.clear();
-            Upcoming.event_end_time.clear();
-            Upcoming.event_duration.clear();
+            Upcoming.upcomingContestData.clear();
         }
         else {
-            Ongoing.event_names.clear();
-            Ongoing.event_url.clear();
-            Ongoing.event_start_time.clear();
-            Ongoing.event_end_time.clear();
-            Ongoing.event_duration.clear();
+            Ongoing.ongoingContestData.clear();
         }
     }
     public void downloadTask(RequestQueue requestQueue, final int frag){
@@ -83,12 +75,10 @@ public class DownloadClass {
                         if(frag==2) {
                             if (curTime.compareTo(eventEndTime) < 0) {
                                 if (curTime.compareTo(eventStartTime) < 0) {
-                                    //Log.i("names",eventName);
-                                    Upcoming.event_names.add(eventName);
-                                    Upcoming.event_url.add(eventUrl);
-                                    Upcoming.event_start_time.add(eventStartTime);
-                                    Upcoming.event_end_time.add(eventEndTime);
-                                    Upcoming.event_duration.add(eventDuration);
+
+                                    Upcoming.upcomingContestData.add(new ContestData(eventName,
+                                            eventUrl,eventStartTime,eventEndTime,
+                                            eventDuration,(int)ContestListActivity.imgId.get(ContestListActivity.siteKey)));
 
                                 }
                             }
@@ -98,11 +88,9 @@ public class DownloadClass {
 
                                 if (curTime.compareTo(eventEndTime) < 0) {
 
-                                    Ongoing.event_names.add(eventName);
-                                    Ongoing.event_url.add(eventUrl);
-                                    Ongoing.event_start_time.add(eventStartTime);
-                                    Ongoing.event_end_time.add(eventEndTime);
-                                    Ongoing.event_duration.add(eventDuration);
+                                    Ongoing.ongoingContestData.add(new ContestData(eventName,
+                                            eventUrl,eventStartTime,eventEndTime,
+                                            eventDuration,(int)ContestListActivity.imgId.get(ContestListActivity.siteKey)));
 
 
                                 }
@@ -132,18 +120,11 @@ public class DownloadClass {
     }
     public void reverse(int frag){
         if(frag==2) {
-            Collections.reverse(Upcoming.event_names);
-            Collections.reverse(Upcoming.event_url);
-            Collections.reverse(Upcoming.event_start_time);
-            Collections.reverse(Upcoming.event_end_time);
-            Collections.reverse(Upcoming.event_duration);
+            Collections.reverse(Upcoming.upcomingContestData);
+
         }
         else {
-            Collections.reverse(Ongoing.event_names);
-            Collections.reverse(Ongoing.event_url);
-            Collections.reverse(Ongoing.event_start_time);
-            Collections.reverse(Ongoing.event_end_time);
-            Collections.reverse(Ongoing.event_duration);
+            Collections.reverse(Ongoing.ongoingContestData);
         }
     }
 }

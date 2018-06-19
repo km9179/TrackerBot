@@ -26,7 +26,6 @@
         </activity>
         <activity
             android:name=".ContestListActivity"
-            android:label="@string/title_activity_contest_list"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">

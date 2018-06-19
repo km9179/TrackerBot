@@ -21,11 +21,7 @@ import java.util.ArrayList;
 public class Ongoing extends Fragment{
 
 
-    public static ArrayList<String> event_names=new ArrayList<>();
-    public static ArrayList<String>event_url=new ArrayList<>();
-    public static ArrayList<String>event_start_time=new ArrayList<>();
-    public static ArrayList<String>event_end_time=new ArrayList<>();
-    public static ArrayList<Integer>event_duration=new ArrayList<>();
+    public static ArrayList<ContestData>ongoingContestData =new ArrayList<>();
     public static RecyclerViewAdapter adapter;
     //public static RequestQueue requestQueue;
 

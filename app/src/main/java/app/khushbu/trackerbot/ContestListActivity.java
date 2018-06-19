@@ -1,6 +1,7 @@
 package app.khushbu.trackerbot;
 
 import android.content.Intent;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,9 +20,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+
+import java.util.Map;
+import java.util.TreeMap;
 
 public class ContestListActivity extends AppCompatActivity {
 
@@ -40,15 +45,32 @@ public class ContestListActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
     public static int siteKey;
+    static Map imgId;
+    Toolbar toolbar;
+    static TextView textToolbar;
+
+    TabLayout tabLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contest_list);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        imgId = new TreeMap();
+        imgId.put(1,R.drawable.codeforces_logo);
+        imgId.put(2,R.drawable.codechef_logo);
+        imgId.put(12,R.drawable.topcoder);
+        imgId.put(73,R.drawable.hackerearth_logo);
+        imgId.put(63,R.drawable.hackerrank);
+
+        tabLayout=(TabLayout)findViewById(R.id.tabs);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+        textToolbar=(TextView)toolbar.findViewById(R.id.textToolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -59,9 +81,36 @@ public class ContestListActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        /*mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+        */
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if(Upcoming.is_in_actionMode){
+                    clearActionMode();
+                }
+                //new TabLayout.ViewPagerOnTabSelectedListener(mViewPager);
+            }
 
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                if(Upcoming.is_in_actionMode){
+                    clearActionMode();
+                }
+                //new TabLayout.ViewPagerOnTabSelectedListener(mViewPager);
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                if(Upcoming.is_in_actionMode){
+                    clearActionMode();
+                }
+                //new TabLayout.ViewPagerOnTabSelectedListener(mViewPager);
+            }
+        });
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +130,20 @@ public class ContestListActivity extends AppCompatActivity {
 
     }
 
+    public void changeMenu(int id){
+        toolbar.getMenu().clear();
+        if(id==1) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            toolbar.inflateMenu(R.menu.menu_contest_list_action_mode);
+        }
+        else{
+            getSupportActionBar().setDisplayShowTitleEnabled(true);
+            toolbar.inflateMenu((R.menu.menu_contest_list));
+        }
+    }
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -97,11 +160,55 @@ public class ContestListActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_fav) {
+
+            Toast.makeText(getApplicationContext(),"Added to favourites",Toast.LENGTH_SHORT).show();
+            // add arraylist selectedContest ArrayList in to database;
+
+
+            clearActionMode();
             return true;
+        }
+        else if(id == android.R.id.home){
+            if(Upcoming.is_in_actionMode) {
+                clearActionMode();
+                return true;
+            }
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(Upcoming.is_in_actionMode){
+            clearActionMode();
+            return;
+        }
+
+        super.onBackPressed();
+    }
+
+    public void clearActionMode(){
+        Upcoming.swipeRefreshLayout.setEnabled(true);
+        changeMenu(2);
+        Upcoming.is_in_actionMode=false;
+        Upcoming.adapter.notifyDataSetChanged();
+        Upcoming.selectedContest.clear();
+        Upcoming.counter = 0;
+        setLayoutScrollFlags(2);
+    }
+
+    public void setLayoutScrollFlags(int id){
+
+        AppBarLayout.LayoutParams toolbarParams=(AppBarLayout.LayoutParams) toolbar.getLayoutParams();
+        if(id==1) {
+            toolbarParams.setScrollFlags(0);
+        }
+        else{
+            toolbarParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
+                    | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+        }
     }
 
     /**
