@@ -14,11 +14,7 @@ public class Fav extends AppCompatActivity {
     private RecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    public static ArrayList<String> event_names=new ArrayList<>();
-    public static ArrayList<String>event_url=new ArrayList<>();
-    public static ArrayList<String>event_start_time=new ArrayList<>();
-    public static ArrayList<String>event_end_time=new ArrayList<>();
-    public static ArrayList<Integer>event_duration=new ArrayList<>();
+    public static ArrayList<ContestData> favContestData=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +22,7 @@ public class Fav extends AppCompatActivity {
         mRecyclerView=(RecyclerView)findViewById(R.id.recyclerViewfav);
         mLayoutManager=new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter=new RecyclerViewAdapter(this,2);
+        mAdapter=new RecyclerViewAdapter(this,3);
         mRecyclerView.setAdapter(mAdapter);
     }
 }

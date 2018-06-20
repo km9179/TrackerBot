@@ -1,8 +1,13 @@
 package app.khushbu.trackerbot;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +22,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ItemClickListener mClickListener;
     Context context;
     Upcoming upcoming;
-    /*Helper helper;
+    ContentValues values=new ContentValues();
+    Helper helper;
     SQLiteDatabase db = helper.getWritableDatabase();
-    ContentValues values = new ContentValues();*/
+
     int id;   //id for identifying fragment------->1 = ongoing fragment and 2 = upcoming fragment
 
     // data is passed into the constructor
@@ -36,8 +42,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         View view;
         if (id == 1)
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ongoing_row, parent, false);
+        else if(id==2)
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.upcoming_row, parent, false);
         else
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.upcoming_row, parent, false);
+
         return new ViewHolder(view);
     }
 
@@ -64,7 +73,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             time.setCountdown(holder.textView2, startTime, endTime);
 
 
-        } else {
+        } else if(id==2) {
 
             //upcoming fragment
             if(!Upcoming.is_in_actionMode){
@@ -88,6 +97,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     upcoming.prepareSelection(v,position);
                 }
             });
+
+        }
+        else
+        {
+
 
         }
 
@@ -175,8 +189,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     ContestData getItem(int id) {
         if (this.id == 1)
             return Ongoing.ongoingContestData.get(id);
-        else
+        else if(id==2)
             return Upcoming.upcomingContestData.get(id);
+        else
+            return Fav.favContestData.get(id);
+
     }
 
     // allows clicks events to be caught
@@ -190,17 +207,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         void onClick(View view ,int position);
     }
 
+    public long insert(String contest_name,String key_val,String date_time)
+    {
+        values.put(Helper.KEY,key_val);
+        values.put(Helper.CON_NAME,contest_name);
+        values.put(Helper.DATE_TIME,date_time);
+        long idd=db.insert(Helper.TABLE_NAME,null,values);
+        return idd;
 
-    /*public class Helper extends SQLiteOpenHelper {
+    }
+
+
+    static class Helper extends SQLiteOpenHelper {
 
         private static final String DATABASE_NAME = "tbdatabase";
         private static final String TABLE_NAME = "TBTABLE";
         private static final int DATABASE_VERSION = 2;
         private static final String KEY = "key";
         private static final String CON_NAME = "contest";
+        private static final String DATE_TIME="DateTime";
         // private static final String PLAT_NAME="codeforces";
 
-        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" + KEY + " VARCHAR(255), " + CON_NAME + " VARCHAR(255));";
+        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" + KEY + " VARCHAR(255), " + CON_NAME + " VARCHAR(255)," +DATE_TIME+" VARCHAR(255));";
         private Context context;
         private static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
@@ -238,6 +266,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
         }
-    }*/
+
+    }
 }
 
