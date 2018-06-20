@@ -69,12 +69,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             //upcoming fragment
             if(!Upcoming.is_in_actionMode){
                 ContestListActivity.textToolbar.setVisibility(View.GONE);
+                Upcoming.upcomingContestData.get(position).setSelected(false);
                 holder.checkBox.setChecked(false);
                 holder.checkBox.setVisibility(View.GONE);
+
             }
             else{
-                holder.checkBox.setVisibility(View.VISIBLE);
-                holder.checkBox.setChecked(false);
+                ContestListActivity.textToolbar.setVisibility(View.VISIBLE);
+                if(Upcoming.upcomingContestData.get(position).isSelected()){
+                    holder.checkBox.setChecked(true);
+                    holder.checkBox.setVisibility(View.VISIBLE);
+                }
+                else{
+                    holder.checkBox.setChecked(false);
+                    holder.checkBox.setVisibility(View.GONE);
+                }
             }
             holder.imageView.setImageResource(Upcoming.upcomingContestData.get(position).getImgId());
             holder.textView1.setText(Upcoming.upcomingContestData.get(position).getEvent_names());
