@@ -216,6 +216,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return idd;
 
     }
+    public boolean deleteTitle(String name)
+    {
+        return db.delete(Helper.TABLE_NAME, Helper.CON_NAME + "=" + name, null) > 0;
+    }
 
 
     static class Helper extends SQLiteOpenHelper {
