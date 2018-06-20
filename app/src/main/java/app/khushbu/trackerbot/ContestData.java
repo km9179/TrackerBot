@@ -8,6 +8,7 @@ public class ContestData {
     private String event_end_time;
     private int event_duration;
     private int imgId;
+    private boolean isSelected;
 
     public ContestData(String event_names,String event_url,String event_start_time,String event_end_time,int event_duration,int imgId){
         this.setEvent_names(event_names);
@@ -64,6 +65,14 @@ public class ContestData {
 
     public void setImgId(int imgId) {
         this.imgId = imgId;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }
 

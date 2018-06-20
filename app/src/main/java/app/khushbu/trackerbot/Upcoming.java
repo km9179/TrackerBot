@@ -1,5 +1,6 @@
 package app.khushbu.trackerbot;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -101,6 +102,7 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
             counter += 1;
             checkBox.setVisibility(View.VISIBLE);
             selectedContest.add(upcomingContestData.get(position));
+            upcomingContestData.get(position).setSelected(true);
             updateCounter(counter);
         }
     }
@@ -115,7 +117,7 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
                 counter -= 1;
                 checkBox.setVisibility(View.GONE);
                 selectedContest.remove(upcomingContestData.get(position));
-
+                upcomingContestData.get(position).setSelected(false);
                 Log.i("t","t");
             }
             else{
@@ -123,9 +125,18 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
                 counter += 1;
                 checkBox.setVisibility(View.VISIBLE);
                 selectedContest.add(upcomingContestData.get(position));
+                upcomingContestData.get(position).setSelected(true);
                 Log.i("u","u");
             }
             updateCounter(counter);
+        }
+        else{
+            //Log.i("url",upcomingContestData.get(position).getEvent_url());
+
+            Intent intent=new Intent(getContext(),WebActivity.class);
+            intent.putExtra("url",upcomingContestData.get(position).getEvent_url());
+            startActivity(intent);
+
         }
     }
 
@@ -133,11 +144,14 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
         if(((CheckBox)view).isChecked()){
             selectedContest.add(upcomingContestData.get(position));
             counter += 1;
+            upcomingContestData.get(position).setSelected(true);
 
         }
         else{
             selectedContest.remove(upcomingContestData.get(position));
             counter -= 1;
+            upcomingContestData.get(position).setSelected(false);
+            ((CheckBox)view).setChecked(false);
             ((CheckBox)view).setVisibility(View.GONE);
         }
         updateCounter(counter);

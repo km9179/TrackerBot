@@ -33,7 +33,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="app.khushbu.trackerbot.MainActivity" />
         </activity>
-        <activity android:name=".Fav"
+        <activity
+            android:name=".Fav"
             android:label="@string/title_activity_contest_list"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
@@ -41,8 +42,9 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="app.khushbu.trackerbot.MainActivity" />
-
         </activity>
+        <activity android:name=".WebActivity"/>
+
     </application>
 
 </manifest>
