@@ -22,9 +22,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ItemClickListener mClickListener;
     Context context;
     Upcoming upcoming;
-    ContentValues values=new ContentValues();
-    Helper helper;
-    SQLiteDatabase db = helper.getWritableDatabase();
+    //ContentValues values=new ContentValues();
+    //Helper helper;
+    //SQLiteDatabase db = helper.getWritableDatabase();
 
     int id;   //id for identifying fragment------->1 = ongoing fragment and 2 = upcoming fragment
 
@@ -216,7 +216,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         void onClick(View view ,int position);
     }
 
-    public long insert(String contest_name,String key_val,String date_time)
+    /*public long insert(String contest_name,String key_val,String date_time)
     {
         values.put(Helper.KEY,key_val);
         values.put(Helper.CON_NAME,contest_name);
@@ -280,6 +280,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         }
 
-    }
+    }*/
 }
 

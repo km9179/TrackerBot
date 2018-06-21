@@ -162,12 +162,13 @@ public class ContestListActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_fav) {
 
-            for(int i=0;i<Upcoming.selectedContest.size();i++)
+            /*for(int i=0;i<Upcoming.selectedContest.size();i++)
             {
 
-            }
+            }*/
             Toast.makeText(getApplicationContext(),"Added to favourites",Toast.LENGTH_SHORT).show();
             // add arraylist selectedContest ArrayList in to database;
+
 
 
             clearActionMode();
@@ -188,6 +189,10 @@ public class ContestListActivity extends AppCompatActivity {
         if(Upcoming.is_in_actionMode){
             clearActionMode();
             return;
+        }
+        else{
+            Intent intent =new Intent(this,MainActivity.class);
+            startActivity(intent);
         }
 
         super.onBackPressed();

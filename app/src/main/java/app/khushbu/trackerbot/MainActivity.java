@@ -156,8 +156,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else if(id== R.id.nav_fav)
         {
-            Intent in=new Intent(this,Fav.class);
-            startActivity(in);
+            //Intent in=new Intent(this,Fav.class);
+            //startActivity(in);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
