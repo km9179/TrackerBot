@@ -3,6 +3,7 @@ package app.khushbu.trackerbot;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
+import android.net.http.SslError;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -53,6 +55,10 @@ public class WebActivity extends AppCompatActivity {
         contestSite.getSettings().setLoadWithOverviewMode(true);
         contestSite.getSettings().setUseWideViewPort(true);
 
+        contestSite.getSettings().setUserAgentString("Mozilla/5.0 (Linux; <Android Version>; <Build Tag etc.>) AppleWebKit/<WebKit Rev> (KHTML, like Gecko) Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>");
+
+        contestSite.getSettings().setBuiltInZoomControls(true);
+
         Intent intent=getIntent();
 
         String url=intent.getStringExtra("url");
@@ -77,6 +83,13 @@ public class WebActivity extends AppCompatActivity {
             frameLayout.setVisibility(View.VISIBLE);
             return true;
         }
+
+        public void onReceivedSslError(final WebView view, final SslErrorHandler handler, final SslError error) {
+            // TODO Auto-generated method stub
+            super.onReceivedSslError(view, handler, error);
+            handler.proceed();
+        }
+
 
     }
 
