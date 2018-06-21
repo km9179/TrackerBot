@@ -24,7 +24,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     Upcoming upcoming;
     ContentValues values=new ContentValues();
     Helper helper;
-    SQLiteDatabase db = helper.getWritableDatabase();
+    SQLiteDatabase db;
+
 
     int id;   //id for identifying fragment------->1 = ongoing fragment and 2 = upcoming fragment
 
@@ -33,6 +34,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.context = context;
         this.id = id;
         upcoming = new Upcoming();
+        helper=new Helper(context);
+        db = helper.getWritableDatabase();
         //Helper helper = new Helper(context);
     }
 
@@ -216,7 +219,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         void onClick(View view ,int position);
     }
 
-    public long insert(String contest_name,String key_val,String date_time)
+    public long insert(String contest_name,int key_val,String date_time)
     {
         values.put(Helper.KEY,key_val);
         values.put(Helper.CON_NAME,contest_name);
@@ -231,6 +234,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
 
+
+
+
     static class Helper extends SQLiteOpenHelper {
 
         private static final String DATABASE_NAME = "tbdatabase";
@@ -241,7 +247,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private static final String DATE_TIME="DateTime";
         // private static final String PLAT_NAME="codeforces";
 
-        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" + KEY + " VARCHAR(255), " + CON_NAME + " VARCHAR(255)," +DATE_TIME+" VARCHAR(255));";
+        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" + KEY + " INTEGER, " + CON_NAME + " VARCHAR(255)," +DATE_TIME+" VARCHAR(255));";
         private Context context;
         private static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 

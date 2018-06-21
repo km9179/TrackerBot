@@ -165,7 +165,10 @@ public class ContestListActivity extends AppCompatActivity {
             for(int i=0;i<Upcoming.selectedContest.size();i++)
             {
 
+                long iddd=Upcoming.adapter.insert(Upcoming.selectedContest.get(i).getEvent_names(),Upcoming.selectedContest.get(i).getImgId(),Upcoming.selectedContest.get(i).getEvent_start_time());
             }
+
+            //Upcoming.adapter.helper.onOpen(Upcoming.adapter.db);
             Toast.makeText(getApplicationContext(),"Added to favourites",Toast.LENGTH_SHORT).show();
             // add arraylist selectedContest ArrayList in to database;
 
