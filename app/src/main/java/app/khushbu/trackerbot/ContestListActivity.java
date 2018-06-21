@@ -166,7 +166,11 @@ public class ContestListActivity extends AppCompatActivity {
             {
 
                 long iddd=Upcoming.adapter.insert(Upcoming.selectedContest.get(i).getEvent_names(),Upcoming.selectedContest.get(i).getImgId(),Upcoming.selectedContest.get(i).getEvent_start_time());
+                Message.message(this,"Inserted Data");
             }
+            Upcoming.adapter.getData();
+            Message.message(this,"Favourite Data");
+
 
             //Upcoming.adapter.helper.onOpen(Upcoming.adapter.db);
             Toast.makeText(getApplicationContext(),"Added to favourites",Toast.LENGTH_SHORT).show();

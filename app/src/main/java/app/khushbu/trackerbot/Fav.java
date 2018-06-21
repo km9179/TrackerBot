@@ -21,6 +21,7 @@ public class Fav extends AppCompatActivity {
         setContentView(R.layout.activity_fav);
         mRecyclerView=(RecyclerView)findViewById(R.id.recyclerViewfav);
         mLayoutManager=new LinearLayoutManager(this);
+       // mLayoutManager.setOrientation
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter=new RecyclerViewAdapter(this,3);
         mRecyclerView.setAdapter(mAdapter);

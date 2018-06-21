@@ -2,6 +2,7 @@ package app.khushbu.trackerbot;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -15,6 +16,11 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
+import static app.khushbu.trackerbot.Helper.CON_NAME;
+import static app.khushbu.trackerbot.Helper.KEY;
+
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
@@ -25,6 +31,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     ContentValues values=new ContentValues();
     Helper helper;
     SQLiteDatabase db;
+    public static ArrayList<ContestData>retrieved_data=new ArrayList<>();
 
 
     int id;   //id for identifying fragment------->1 = ongoing fragment and 2 = upcoming fragment
@@ -113,6 +120,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
         else
         {
+            holder.imageView.setImageResource(retrieved_data.get(position).getImgId());
+            holder.textView1.setText(retrieved_data.get(position).getEvent_names());
+            String z = retrieved_data.get(position).getEvent_start_time();
+            holder.textView2.setText(z);
 
 
         }
@@ -225,12 +236,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         values.put(Helper.CON_NAME,contest_name);
         values.put(Helper.DATE_TIME,date_time);
         long idd=db.insert(Helper.TABLE_NAME,null,values);
+
         return idd;
 
     }
+
     public boolean deleteTitle(String name)
     {
         return db.delete(Helper.TABLE_NAME, Helper.CON_NAME + "=" + name, null) > 0;
+    }
+    public void getData()
+    {
+        String[] columns={KEY,CON_NAME,Helper.DATE_TIME};
+        Cursor cursor=db.query(Helper.TABLE_NAME,columns,null,null,null,null,null);
+        int i=0;
+        while(cursor.moveToNext())
+        {
+            retrieved_data.get(i).setImgId(cursor.getInt(0));
+            retrieved_data.get(i).setEvent_names(cursor.getString(1));
+            retrieved_data.get(i).setEvent_start_time(cursor.getString(2));
+            i++;
+
+        }
     }
 
 
@@ -241,7 +268,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         private static final String DATABASE_NAME = "tbdatabase";
         private static final String TABLE_NAME = "TBTABLE";
-        private static final int DATABASE_VERSION = 2;
+        private static final int DATABASE_VERSION = 3;
         private static final String KEY = "key";
         private static final String CON_NAME = "contest";
         private static final String DATE_TIME="DateTime";
@@ -254,7 +281,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public Helper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
             this.context = context;
-            //Message.message(context,"CONSTRUCTOR WAS CALLED");
+            Message.message(context,"CONSTRUCTOR WAS CALLED");
             Log.i("Constructor", "Called");
         }
 
@@ -262,10 +289,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public void onCreate(SQLiteDatabase db) {
             try {
                 db.execSQL(CREATE_TABLE);
-                // Message.message(context,"DB CREATED");
+                Message.message(context,"DB CREATED");
                 Log.i("CREATE", "create was called");
             } catch (SQLException e) {
-                //Message.message(context,""+e);
+                Message.message(context,""+e);
             }
 
 
@@ -275,12 +302,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public void onUpgrade(SQLiteDatabase db, int i, int i1) {
             try {
                 db.execSQL(DROP_TABLE);
-                // Message.message(context,"TABLE DROPPED");
+                 Message.message(context,"TABLE DROPPED");
                 onCreate(db);
-                //Message.message(context,"TABLE RECREATED");
+                Message.message(context,"TABLE RECREATED");
                 Log.i("UPGRADE", "On upgrade called");
             } catch (SQLException e) {
-                //Message.message(context,""+e);
+                Message.message(context,""+e);
             }
 
 
