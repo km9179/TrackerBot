@@ -18,6 +18,10 @@ public class ContestData {
         this.setEvent_duration(event_duration);
         this.setImgId(imgId);
     }
+    public ContestData(int imgId,String event_names,String event_start_time)
+    {
+
+    }
 
     public String getEvent_names() {
         return event_names;

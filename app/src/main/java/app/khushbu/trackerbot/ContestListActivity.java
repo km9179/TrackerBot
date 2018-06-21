@@ -170,6 +170,7 @@ public class ContestListActivity extends AppCompatActivity {
             }
             Upcoming.adapter.getData();
             Message.message(this,"Favourite Data");
+            Upcoming.adapter.show_data();
 
 
             //Upcoming.adapter.helper.onOpen(Upcoming.adapter.db);

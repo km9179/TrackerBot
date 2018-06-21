@@ -229,15 +229,38 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         void onLongClick(View view, int position);
         void onClick(View view ,int position);
     }
+    public boolean CheckIsDataAlreadyInDBorNot(String TableName,
+                                                      String col_name_val, String con_name) {
+
+        String Query = "Select * from " + TableName + " where " + col_name_val + " = " + con_name;
+        Cursor cursor = db.rawQuery(Query, null);
+        if(cursor.getCount() <= 0){
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        return true;
+    }
 
     public long insert(String contest_name,int key_val,String date_time)
     {
-        values.put(Helper.KEY,key_val);
-        values.put(Helper.CON_NAME,contest_name);
-        values.put(Helper.DATE_TIME,date_time);
-        long idd=db.insert(Helper.TABLE_NAME,null,values);
+        //int query=("SELECT EXISTS(SELECT "+helper.CON_NAME+" FROM "+helper.TABLE_NAME+" WHERE "+helper.CON_NAME+" = "+contest_name+" ;")
+        //Cursor cur=db.rawQuery(query,null);
+       // if(query==0) {
+        if(CheckIsDataAlreadyInDBorNot(Helper.TABLE_NAME,Helper.CON_NAME,contest_name)) {
+            return -1;
 
-        return idd;
+        }
+        //}
+        else
+        {
+            values.put(Helper.KEY, key_val);
+            values.put(Helper.CON_NAME, contest_name);
+            values.put(Helper.DATE_TIME, date_time);
+            long idd = db.insert(Helper.TABLE_NAME, null, values);
+
+            return idd;
+        }
 
     }
 
@@ -252,10 +275,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         int i=0;
         while(cursor.moveToNext())
         {
-            retrieved_data.get(i).setImgId(cursor.getInt(0));
-            retrieved_data.get(i).setEvent_names(cursor.getString(1));
-            retrieved_data.get(i).setEvent_start_time(cursor.getString(2));
-            i++;
+            retrieved_data.add(new ContestData(cursor.getInt(0),cursor.getString(1),cursor.getString(2)));
+
+        }
+    }
+    public void show_data()
+    {
+        String[] columns={KEY,CON_NAME,Helper.DATE_TIME};
+        Cursor cursor=db.query(Helper.TABLE_NAME,columns,null,null,null,null,null);
+        int i=0;
+        while(cursor.moveToNext())
+        {
+            //retrieved_data.add(new ContestData(cursor.getInt(0),cursor.getString(1),cursor.getString(2)));
+            Log.i("ROW1:",cursor.getInt(0)+"\n"+cursor.getString(1)+"\n"+cursor.getString(2));
 
         }
     }
@@ -268,7 +300,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         private static final String DATABASE_NAME = "tbdatabase";
         private static final String TABLE_NAME = "TBTABLE";
-        private static final int DATABASE_VERSION = 3;
+        private static final int DATABASE_VERSION = 4;
         private static final String KEY = "key";
         private static final String CON_NAME = "contest";
         private static final String DATE_TIME="DateTime";
