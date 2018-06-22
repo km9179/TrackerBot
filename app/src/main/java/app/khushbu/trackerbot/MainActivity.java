@@ -2,7 +2,13 @@
 package app.khushbu.trackerbot;
 
 import android.app.FragmentManager;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -17,10 +23,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.ArrayList;
+
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
 
     private DrawerLayout mDrawerLayout;
 
+    ContentValues values=new ContentValues();
+    static Database.Helper helper;
+    static SQLiteDatabase db;
 
 
     //Button buttonCF;
@@ -76,6 +88,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        helper =new Database.Helper((MainActivity)this);
+        db = helper.getWritableDatabase();
+
     }
     /*    @Override
         public boolean onOptionsItemSelected(MenuItem item) {
@@ -164,4 +180,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

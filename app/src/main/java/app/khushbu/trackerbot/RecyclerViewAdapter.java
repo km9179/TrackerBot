@@ -18,8 +18,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import static app.khushbu.trackerbot.Helper.CON_NAME;
-import static app.khushbu.trackerbot.Helper.KEY;
+//import static app.khushbu.trackerbot.RecyclerViewAdapter.Helper.CON_NAME;
+//import static app.khushbu.trackerbot.RecyclerViewAdapter.Helper.KEY;
 
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
@@ -28,10 +28,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ItemClickListener mClickListener;
     Context context;
     Upcoming upcoming;
-    ContentValues values=new ContentValues();
-    Helper helper;
-    SQLiteDatabase db;
-    public static ArrayList<ContestData>retrieved_data=new ArrayList<>();
+    //ContentValues values = new ContentValues();
+    //Helper helper;
+    //SQLiteDatabase db;
+    public static ArrayList<ContestData> retrieved_data = new ArrayList<>();
 
 
     int id;   //id for identifying fragment------->1 = ongoing fragment and 2 = upcoming fragment
@@ -41,8 +41,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.context = context;
         this.id = id;
         upcoming = new Upcoming();
-        helper=new Helper(context);
-        db = helper.getWritableDatabase();
+        //helper=new Helper(context);
+        //db = helper.getWritableDatabase();
         //Helper helper = new Helper(context);
     }
 
@@ -52,7 +52,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         View view;
         if (id == 1)
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ongoing_row, parent, false);
-        else if(id==2)
+        else if (id == 2)
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.upcoming_row, parent, false);
         else
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.upcoming_row, parent, false);
@@ -83,23 +83,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             time.setCountdown(holder.textView2, startTime, endTime);
 
 
-        } else if(id==2) {
+        } else if (id == 2) {
 
             //upcoming fragment
-            if(!Upcoming.is_in_actionMode){
+            if (!Upcoming.is_in_actionMode) {
                 ContestListActivity.textToolbar.setVisibility(View.GONE);
                 Upcoming.upcomingContestData.get(position).setSelected(false);
                 holder.checkBox.setChecked(false);
                 holder.checkBox.setVisibility(View.GONE);
 
-            }
-            else{
+            } else {
                 ContestListActivity.textToolbar.setVisibility(View.VISIBLE);
-                if(Upcoming.upcomingContestData.get(position).isSelected()){
+                if (Upcoming.upcomingContestData.get(position).isSelected()) {
                     holder.checkBox.setChecked(true);
                     holder.checkBox.setVisibility(View.VISIBLE);
-                }
-                else{
+                } else {
                     holder.checkBox.setChecked(false);
                     holder.checkBox.setVisibility(View.GONE);
                 }
@@ -113,18 +111,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    upcoming.prepareSelection(v,position);
+                    upcoming.prepareSelection(v, position);
                 }
             });
 
-        }
-        else
-        {
-            holder.imageView.setImageResource(retrieved_data.get(position).getImgId());
+        } else {
+            /*holder.imageView.setImageResource(retrieved_data.get(position).getImgId());
             holder.textView1.setText(retrieved_data.get(position).getEvent_names());
             String z = retrieved_data.get(position).getEvent_start_time();
             holder.textView2.setText(z);
-
+*/
 
         }
 
@@ -170,7 +166,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
     // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener , View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
         TextView textView1, textView2;
         ImageView imageView;
         View v;
@@ -193,7 +189,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         @Override
         public boolean onLongClick(View v) {
-            if(mClickListener!=null) {
+            if (mClickListener != null) {
                 mClickListener.onLongClick(v, getAdapterPosition());
                 return true;
             }
@@ -202,8 +198,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         @Override
         public void onClick(View v) {
-            if(mClickListener!=null){
-                mClickListener.onClick(v,getAdapterPosition());
+            if (mClickListener != null) {
+                mClickListener.onClick(v, getAdapterPosition());
             }
         }
     }
@@ -212,7 +208,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     ContestData getItem(int id) {
         if (this.id == 1)
             return Ongoing.ongoingContestData.get(id);
-        else if(id==2)
+        else if (id == 2)
             return Upcoming.upcomingContestData.get(id);
         else
             return Fav.favContestData.get(id);
@@ -227,13 +223,31 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     // parent activity will implement this method to respond to click events
     public interface ItemClickListener {
         void onLongClick(View view, int position);
-        void onClick(View view ,int position);
+
+        void onClick(View view, int position);
     }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
     public boolean CheckIsDataAlreadyInDBorNot(String TableName,
                                                       String col_name_val, String con_name) {
 
-        String Query = "Select * from " + TableName + " where " + col_name_val + " = " + con_name;
-        Cursor cursor = db.rawQuery(Query, null);
+        String Query = "Select * from " + TableName + " where " + col_name_val + " = '" + con_name+"'";
+        Cursor cursor = MainActivity.db.rawQuery(Query, null);
         if(cursor.getCount() <= 0){
             cursor.close();
             return false;
@@ -247,31 +261,49 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         //int query=("SELECT EXISTS(SELECT "+helper.CON_NAME+" FROM "+helper.TABLE_NAME+" WHERE "+helper.CON_NAME+" = "+contest_name+" ;")
         //Cursor cur=db.rawQuery(query,null);
        // if(query==0) {
-        if(CheckIsDataAlreadyInDBorNot(Helper.TABLE_NAME,Helper.CON_NAME,contest_name)) {
+        //if(CheckIsDataAlreadyInDBorNot(Helper.TABLE_NAME,Helper.CON_NAME,contest_name)) {
+        //    return -1;
+
+        //}
+        //}
+        //else
+
+
+        if(CheckIsDataAlreadyInDBorNot(Helper.TABLE_NAME,Helper.CON_NAME,contest_name)){
+            Log.i("ROW1-msg","exists");
             return -1;
 
+
         }
-        //}
-        else
-        {
+        else {
             values.put(Helper.KEY, key_val);
             values.put(Helper.CON_NAME, contest_name);
             values.put(Helper.DATE_TIME, date_time);
-            long idd = db.insert(Helper.TABLE_NAME, null, values);
+            long idd = MainActivity.db.insert(Helper.TABLE_NAME, null, values);
 
             return idd;
         }
 
     }
 
+    public void deleteRow(String currentTime){
+        String statement = "DELETE FROM "+Helper.TABLE_NAME+" WHERE "+Helper.DATE_TIME+" <= '"+new Time().getCurrentTimeStamp()+"'";
+        Cursor c=MainActivity.db.rawQuery(statement,null);
+        while(c.moveToNext()){
+            Log.i("deletable",c.getString(1));
+        }
+
+
+    }
+
     public boolean deleteTitle(String name)
     {
-        return db.delete(Helper.TABLE_NAME, Helper.CON_NAME + "=" + name, null) > 0;
+        return MainActivity.db.delete(Helper.TABLE_NAME, Helper.CON_NAME + "=" + name, null) > 0;
     }
     public void getData()
     {
         String[] columns={KEY,CON_NAME,Helper.DATE_TIME};
-        Cursor cursor=db.query(Helper.TABLE_NAME,columns,null,null,null,null,null);
+        Cursor cursor=MainActivity.db.query(Helper.TABLE_NAME,columns,null,null,null,null,null);
         int i=0;
         while(cursor.moveToNext())
         {
@@ -282,7 +314,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void show_data()
     {
         String[] columns={KEY,CON_NAME,Helper.DATE_TIME};
-        Cursor cursor=db.query(Helper.TABLE_NAME,columns,null,null,null,null,null);
+        Cursor cursor=MainActivity.db.query(Helper.TABLE_NAME,columns,null,null,null,null,null);
         int i=0;
         while(cursor.moveToNext())
         {
@@ -298,17 +330,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     static class Helper extends SQLiteOpenHelper {
 
-        private static final String DATABASE_NAME = "tbdatabase";
-        private static final String TABLE_NAME = "TBTABLE";
-        private static final int DATABASE_VERSION = 4;
-        private static final String KEY = "key";
-        private static final String CON_NAME = "contest";
-        private static final String DATE_TIME="DateTime";
+        public static final String DATABASE_NAME = "tbdatabase";
+        public static final String TABLE_NAME = "TBTABLE";
+        public static final int DATABASE_VERSION = 4;
+        public static final String KEY = "key";
+        public static final String CON_NAME = "contest";
+        public static final String DATE_TIME="DateTime";
         // private static final String PLAT_NAME="codeforces";
 
-        private static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" + KEY + " INTEGER, " + CON_NAME + " VARCHAR(255)," +DATE_TIME+" VARCHAR(255));";
-        private Context context;
-        private static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
+        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" + KEY + " INTEGER, " + CON_NAME + " VARCHAR(255)," +DATE_TIME+" VARCHAR(255));";
+        public Context context;
+        public static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
         public Helper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -346,5 +378,62 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
     }
+    /*
+
+import android.content.Context;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+public class Helper extends SQLiteOpenHelper {
+
+    public static final String DATABASE_NAME="tbdatabase";
+    public static final String TABLE_NAME="TBTABLE";
+    public static final int DATABASE_VERSION=2;
+    public static final String KEY="key";
+    public static final String CON_NAME="contest";
+    // private static final String PLAT_NAME="codeforces";
+
+    private static final  String CREATE_TABLE="CREATE TABLE "+TABLE_NAME+"("+KEY+" VARCHAR(255), "+CON_NAME+" VARCHAR(255));";
+    private Context context;
+    private static final String DROP_TABLE="DROP TABLE IF EXISTS "+TABLE_NAME;
+
+    public Helper(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context=context;
+        //Message.message(context,"CONSTRUCTOR WAS CALLED");
+        Log.i("Constructor","Called");
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        try {
+            db.execSQL(CREATE_TABLE);
+           // Message.message(context,"DB CREATED");
+            Log.i("CREATE","create was called");
+        } catch (SQLException e) {
+            //Message.message(context,""+e);
+        }
+
+
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
+        try {
+            db.execSQL(DROP_TABLE);
+           // Message.message(context,"TABLE DROPPED");
+            onCreate(db);
+            //Message.message(context,"TABLE RECREATED");
+            Log.i("UPGRADE","On upgrade called");
+        } catch (SQLException e) {
+            //Message.message(context,""+e);
+        }
+
+
+    }
 }
+     */
+//}
 

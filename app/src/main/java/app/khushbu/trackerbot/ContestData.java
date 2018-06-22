@@ -23,6 +23,9 @@ public class ContestData {
 
     }
 
+    public ContestData(){
+
+    }
     public String getEvent_names() {
         return event_names;
     }

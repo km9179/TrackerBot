@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -50,12 +51,16 @@ public class ContestListActivity extends AppCompatActivity {
     static TextView textToolbar;
 
     TabLayout tabLayout;
+    Database database;
+    //MainActivity mainActivity;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contest_list);
+
+        database=new Database();
 
         imgId = new TreeMap();
         imgId.put(1,R.drawable.codeforces_logo);
@@ -128,6 +133,7 @@ public class ContestListActivity extends AppCompatActivity {
         downloadClass.downloadTask(requestQueue,1);
         downloadClass.downloadTask(requestQueue,2);
 
+
     }
 
     public void changeMenu(int id){
@@ -165,18 +171,23 @@ public class ContestListActivity extends AppCompatActivity {
             for(int i=0;i<Upcoming.selectedContest.size();i++)
             {
 
-                long iddd=Upcoming.adapter.insert(Upcoming.selectedContest.get(i).getEvent_names(),Upcoming.selectedContest.get(i).getImgId(),Upcoming.selectedContest.get(i).getEvent_start_time());
+                long iddd=database.insert(Upcoming.selectedContest.get(i).getEvent_names(),Upcoming.selectedContest.get(i).getImgId(),Upcoming.selectedContest.get(i).getEvent_start_time());
                 Message.message(this,"Inserted Data");
             }
-            Upcoming.adapter.getData();
+            //mainActivity.getData();
             Message.message(this,"Favourite Data");
-            Upcoming.adapter.show_data();
+            //Upcoming.adapter.show_data();
 
+            database.deleteRow(new Time().getCurrentTimeStamp());
+            database.show_data();
+            //mainActivity.show_data();
 
             //Upcoming.adapter.helper.onOpen(Upcoming.adapter.db);
             Toast.makeText(getApplicationContext(),"Added to favourites",Toast.LENGTH_SHORT).show();
             // add arraylist selectedContest ArrayList in to database;
 
+            //for(int i=0;i<Fav.favContestData.size();i++)
+              //  Log.i("msg",Fav.favContestData.get(i).getEvent_names());
 
             clearActionMode();
             return true;
