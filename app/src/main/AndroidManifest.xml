@@ -43,8 +43,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="app.khushbu.trackerbot.MainActivity" />
         </activity>
-        <activity android:name=".WebActivity"/>
-
+        <activity android:name=".WebActivity" />
+        <activity android:name=".ALL_CONTEST_Activity"></activity>
     </application>
 
 </manifest>

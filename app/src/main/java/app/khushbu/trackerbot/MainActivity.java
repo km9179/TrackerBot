@@ -175,6 +175,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent in=new Intent(this,Fav.class);
             startActivity(in);
         }
+        else if(id==R.id.nav_all_ongoing_contest)
+        {
+            Intent in=new Intent(this,ALL_CONTEST_Activity.class);
+            startActivity(in);
+
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
