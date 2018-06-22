@@ -18,17 +18,17 @@ public class ALL_CONTEST_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all__contest_);
 
-        mMRecyclerView=(RecyclerView)findViewById(R.id.all_contest_RecyclerView);
+        /*mMRecyclerView=(RecyclerView)findViewById(R.id.all_contest_RecyclerView);
         aAdapter=new RecyclerViewAdapter(getActivity(),4);
         mMRecyclerView.setAdapter(aAdapter);
 
         LinearLayoutManager llm=new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mMRecyclerView.setLayoutManager(llm);
-
+*/
     }
 
-    public Context getActivity() {
-        return this;
-    }
+    //public Context getActivity() {
+      //  return this;
+    //}
 }

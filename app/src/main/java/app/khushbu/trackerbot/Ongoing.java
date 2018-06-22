@@ -30,6 +30,14 @@ public class Ongoing extends Fragment implements RecyclerViewAdapter.ItemClickLi
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new InternetCheck(getActivity()).isInternetConnectionAvailable(new InternetCheck.InternetCheckListener() {
+
+            @Override
+            public void onComplete(boolean connected) {
+                //proceed!
+                MainActivity.isConnected=connected;
+            }
+        });
     }
 
     @Nullable
@@ -73,6 +81,14 @@ public class Ongoing extends Fragment implements RecyclerViewAdapter.ItemClickLi
     @Override
     public void onClick(View view, int position) {
         //Log.i("url",ongoingContestData.get(position).getEvent_url());
+        new InternetCheck(getActivity()).isInternetConnectionAvailable(new InternetCheck.InternetCheckListener() {
+
+            @Override
+            public void onComplete(boolean connected) {
+                //proceed!
+                MainActivity.isConnected=connected;
+            }
+        });
         Intent intent=new Intent(getContext(),WebActivity.class);
         intent.putExtra("url",ongoingContestData.get(position).getEvent_url());
         startActivity(intent);

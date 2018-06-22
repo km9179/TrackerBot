@@ -36,5 +36,6 @@ public class CF_Options extends android.app.DialogFragment implements View.OnCli
         Intent intent=new Intent(getActivity(),ContestListActivity.class);
         intent.putExtra("id",tag);
         startActivity(intent);
+        dismiss();
     }
 }

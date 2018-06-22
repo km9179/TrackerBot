@@ -18,13 +18,7 @@ public class ContestData {
         this.setEvent_duration(event_duration);
         this.setImgId(imgId);
     }
-    public ContestData(int imgId,String event_names,String event_start_time)
-    {
-        this.setEvent_names(event_names);
-        this.setEvent_start_time(event_start_time);
-        this.setImgId(imgId);
 
-    }
 
     public ContestData(){
 

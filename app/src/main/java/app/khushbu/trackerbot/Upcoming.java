@@ -32,15 +32,25 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
 
     public static ArrayList<ContestData> upcomingContestData=new ArrayList<>();
     public static ArrayList<ContestData> selectedContest = new ArrayList<>();
-    static int counter=0;
+    static int counter;
     public static RecyclerViewAdapter adapter;
     static SwipeRefreshLayout swipeRefreshLayout;
-    static boolean is_in_actionMode=false;
+    static boolean is_in_actionMode;
 
     ContestListActivity activity;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*new InternetCheck(getActivity()).isInternetConnectionAvailable(new InternetCheck.InternetCheckListener() {
+
+            @Override
+            public void onComplete(boolean connected) {
+                //proceed!
+                MainActivity.isConnected=connected;
+            }
+        });*/
+        counter=0;
+        is_in_actionMode=false;
     }
 
     @Nullable
@@ -109,6 +119,14 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
 
     @Override
     public void onClick(View view, int position) {
+        /*new InternetCheck(getActivity()).isInternetConnectionAvailable(new InternetCheck.InternetCheckListener() {
+
+            @Override
+            public void onComplete(boolean connected) {
+                //proceed!
+                MainActivity.isConnected=connected;
+            }
+        });*/
         if(is_in_actionMode){
             CheckBox checkBox=(CheckBox) view.findViewById(R.id.checkBox);
             if(checkBox.isChecked()) {
@@ -195,4 +213,5 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
 
 
     }*/
+
 }

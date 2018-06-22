@@ -78,7 +78,7 @@ public class DownloadClass {
 
                                     Upcoming.upcomingContestData.add(new ContestData(eventName,
                                             eventUrl,eventStartTime,eventEndTime,
-                                            eventDuration,(int)ContestListActivity.imgId.get(ContestListActivity.siteKey)));
+                                            eventDuration,(int)MainActivity.imgId.get(ContestListActivity.siteKey)));
 
                                 }
                             }
@@ -90,7 +90,7 @@ public class DownloadClass {
 
                                     Ongoing.ongoingContestData.add(new ContestData(eventName,
                                             eventUrl,eventStartTime,eventEndTime,
-                                            eventDuration,(int)ContestListActivity.imgId.get(ContestListActivity.siteKey)));
+                                            eventDuration,(int)MainActivity.imgId.get(ContestListActivity.siteKey)));
 
 
                                 }

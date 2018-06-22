@@ -1,6 +1,7 @@
 package app.khushbu.trackerbot;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -26,8 +27,11 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import java.util.Map;
 import java.util.TreeMap;
+
 
 public class ContestListActivity extends AppCompatActivity {
 
@@ -46,12 +50,14 @@ public class ContestListActivity extends AppCompatActivity {
      */
     private ViewPager mViewPager;
     public static int siteKey;
-    static Map imgId;
+
     Toolbar toolbar;
     static TextView textToolbar;
 
     TabLayout tabLayout;
     Database database;
+
+    UpdateDatabase updateDatabase;
     //MainActivity mainActivity;
 
 
@@ -60,14 +66,17 @@ public class ContestListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contest_list);
 
-        database=new Database();
+        new InternetCheck(this).isInternetConnectionAvailable(new InternetCheck.InternetCheckListener() {
 
-        imgId = new TreeMap();
-        imgId.put(1,R.drawable.codeforces_logo);
-        imgId.put(2,R.drawable.codechef_logo);
-        imgId.put(12,R.drawable.topcoder);
-        imgId.put(73,R.drawable.hackerearth_logo);
-        imgId.put(63,R.drawable.hackerrank);
+            @Override
+            public void onComplete(boolean connected) {
+                //proceed!
+                MainActivity.isConnected=connected;
+            }
+        });
+        database=new Database();
+        updateDatabase =new UpdateDatabase();
+
 
         tabLayout=(TabLayout)findViewById(R.id.tabs);
 
@@ -168,22 +177,30 @@ public class ContestListActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_fav) {
 
-            for(int i=0;i<Upcoming.selectedContest.size();i++)
+            try {
+                updateDatabase.execute();
+            }
+            catch (Exception e){
+
+            }
+            /*for(int i=0;i<Upcoming.selectedContest.size();i++)
             {
 
-                long iddd=database.insert(Upcoming.selectedContest.get(i).getEvent_names(),Upcoming.selectedContest.get(i).getImgId(),Upcoming.selectedContest.get(i).getEvent_start_time(),Upcoming.selectedContest.get(i).getEvent_end_time(),Upcoming.selectedContest.get(i).getEvent_duration(),Upcoming.selectedContest.get(i).getEvent_url());
+                //Fav.favContestData.add(Upcoming.selectedContest.get(i));
+                //long iddd=database.insert(Upcoming.selectedContest.get(i).getEvent_names(),Upcoming.selectedContest.get(i).getImgId(),Upcoming.selectedContest.get(i).getEvent_start_time(),Upcoming.selectedContest.get(i).getEvent_end_time(),Upcoming.selectedContest.get(i).getEvent_duration(),Upcoming.selectedContest.get(i).getEvent_url());
                 Message.message(this,"Inserted Data");
-            }
+            }*/
             //mainActivity.getData();
             Message.message(this,"Favourite Data");
+
             //Upcoming.adapter.show_data();
 
-            database.deleteRow(new Time().getCurrentTimeStamp());
-            database.show_data();
+            //database.deleteRow(new Time().getCurrentTimeStamp());
+            //database.show_data();
             //mainActivity.show_data();
 
             //Upcoming.adapter.helper.onOpen(Upcoming.adapter.db);
-            Toast.makeText(getApplicationContext(),"Added to favourites",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(),"Added to favourites",Toast.LENGTH_SHORT).show();
             // add arraylist selectedContest ArrayList in to database;
 
             //for(int i=0;i<Fav.favContestData.size();i++)
@@ -217,7 +234,7 @@ public class ContestListActivity extends AppCompatActivity {
         changeMenu(2);
         Upcoming.is_in_actionMode=false;
         Upcoming.adapter.notifyDataSetChanged();
-        Upcoming.selectedContest.clear();
+        //Upcoming.selectedContest.clear();
         Upcoming.counter = 0;
         setLayoutScrollFlags(2);
     }
@@ -299,6 +316,32 @@ public class ContestListActivity extends AppCompatActivity {
         public int getCount() {
             // Show 2 total pages.
             return 2;
+        }
+    }
+
+    class UpdateDatabase extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            for(int i=0;i<Upcoming.selectedContest.size();i++)
+            {
+                //Fav.favContestData.add(Upcoming.selectedContest.get(i));
+                try {
+                    long iddd = database.insert(Upcoming.selectedContest.get(i).getEvent_names(), Upcoming.selectedContest.get(i).getImgId(), Upcoming.selectedContest.get(i).getEvent_start_time(), Upcoming.selectedContest.get(i).getEvent_end_time(), Upcoming.selectedContest.get(i).getEvent_duration(), Upcoming.selectedContest.get(i).getEvent_url());
+                }
+                catch (Exception e){
+                    String errorString = Upcoming.selectedContest.get(i).getEvent_names();
+                    errorString = errorString.replace("'","");
+                    //errorString =errorString.replaceAll("\"","\"");
+                    //errorString = StringEscapeUtils.escapeJava(errorString);
+                    Upcoming.selectedContest.get(i).setEvent_names(errorString);
+                    long iddd = database.insert(Upcoming.selectedContest.get(i).getEvent_names(), Upcoming.selectedContest.get(i).getImgId(), Upcoming.selectedContest.get(i).getEvent_start_time(), Upcoming.selectedContest.get(i).getEvent_end_time(), Upcoming.selectedContest.get(i).getEvent_duration(), Upcoming.selectedContest.get(i).getEvent_url());
+
+                }
+                //Message.message(ContestListActivity.this,"Inserted Data");
+            }
+            Upcoming.selectedContest.clear();
+            return null;
         }
     }
 }

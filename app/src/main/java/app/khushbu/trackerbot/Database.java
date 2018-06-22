@@ -10,9 +10,6 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import static app.khushbu.trackerbot.Database.Helper.CON_NAME;
-import static app.khushbu.trackerbot.Database.Helper.EVENT_START_TIME;
-import static app.khushbu.trackerbot.Database.Helper.KEY;
 
 public class Database {
 
@@ -20,7 +17,7 @@ public class Database {
 
     }
 
-    public static ArrayList<ContestData> retrieved_data=new ArrayList<>();
+    //public static ArrayList<ContestData> retrieved_data=new ArrayList<>();
     ContentValues values=new ContentValues();
     public boolean CheckIsDataAlreadyInDBorNot(String TableName,
                                                String col_name_val, String con_name) {
@@ -35,29 +32,24 @@ public class Database {
         return true;
     }
 
-    public long insert(String contest_name,int key_val,String date_time,String end_time,int duration,String url)
+    public long insert(String contest_name,int key_val,String start_time,String end_time,int duration,String url)
     {
-        //int query=("SELECT EXISTS(SELECT "+helper.CON_NAME+" FROM "+helper.TABLE_NAME+" WHERE "+helper.CON_NAME+" = "+contest_name+" ;")
-        //Cursor cur=db.rawQuery(query,null);
-        // if(query==0) {
-        //if(CheckIsDataAlreadyInDBorNot(Helper.TABLE_NAME,Helper.CON_NAME,contest_name)) {
-        //    return -1;
-
-        //}
-        //}
-        //else
 
 
-        if(CheckIsDataAlreadyInDBorNot(Helper.TABLE_NAME, CON_NAME,contest_name)){
+        if(contest_name.contains("'")){
+            contest_name=contest_name.replace("'","");
+        }
+
+        if(CheckIsDataAlreadyInDBorNot(Helper.TABLE_NAME, Helper.CON_NAME,contest_name)){
             Log.i("ROW1-msg","exists");
             return -1;
 
 
         }
         else {
-            values.put(KEY, key_val);
-            values.put(CON_NAME, contest_name);
-            values.put(Helper.EVENT_START_TIME, date_time);
+            values.put(Helper.KEY, key_val);
+            values.put(Helper.CON_NAME, contest_name);
+            values.put(Helper.EVENT_START_TIME, start_time);
             values.put(Helper.EVENT_END_TIME,end_time);
             values.put(Helper.EVENT_DURATION,duration);
             values.put(Helper.EVENT_URL,url);
@@ -69,39 +61,53 @@ public class Database {
     }
 
     public void deleteRow(String currentTime){
-        String statement = "DELETE FROM "+Helper.TABLE_NAME+" WHERE "+Helper.EVENT_START_TIME+" <= '"+new Time().getCurrentTimeStamp()+"'";
+        String statement = "DELETE FROM "+Helper.TABLE_NAME+" WHERE "+Helper.EVENT_START_TIME+" <= '"+currentTime+"'";
+        //String statement = "DELETE FROM "+Helper.TABLE_NAME;
         Cursor c=MainActivity.db.rawQuery(statement,null);
-        while(c.moveToNext()){
-            Log.i("deletable",c.getString(1));
-        }
+
 
 
     }
 
     public boolean deleteTitle(String name)
     {
-        return MainActivity.db.delete(Helper.TABLE_NAME, CON_NAME + "=" + name, null) > 0;
+        return MainActivity.db.delete(Helper.TABLE_NAME, Helper.CON_NAME + "= '" + name+"'", null) > 0;
     }
     public void getData()
     {
-        String[] columns={KEY,CON_NAME,Helper.EVENT_START_TIME};
-        Cursor cursor=MainActivity.db.query(Helper.TABLE_NAME,columns,null,null,null,null,null);
+        String[] columns={Helper.KEY,Helper.CON_NAME,Helper.EVENT_START_TIME};
+        Cursor cursor=MainActivity.db.query(Helper.TABLE_NAME,null,null,null,null,null,Helper.EVENT_START_TIME);
         int i=0;
+        Fav.favContestData.clear();
         while(cursor.moveToNext())
         {
-            retrieved_data.add(new ContestData(cursor.getInt(cursor.getColumnIndex(KEY)),cursor.getString(cursor.getColumnIndex(CON_NAME)),cursor.getString(cursor.getColumnIndex(EVENT_START_TIME))));
+            String contestName=cursor.getString(cursor.getColumnIndex(Helper.CON_NAME));
+            contestName=contestName.replaceAll("'","");
+            //Fav.favContestData.add(new ContestData(cursor.getInt(cursor.getColumnIndex(KEY)),cursor.getString(cursor.getColumnIndex(CON_NAME)),cursor.getString(cursor.getColumnIndex(EVENT_START_TIME))));
+            Fav.favContestData.add(new ContestData(
+                    contestName,
+                    cursor.getString(cursor.getColumnIndex(Helper.EVENT_URL)),
+                    cursor.getString(cursor.getColumnIndex(Helper.EVENT_START_TIME)),
+                    cursor.getString(cursor.getColumnIndex(Helper.EVENT_END_TIME)),
+                    cursor.getInt(cursor.getColumnIndex(Helper.EVENT_DURATION)),
+                    cursor.getInt(cursor.getColumnIndex(Helper.KEY))
+            ));
+            Log.i("msg1",Fav.favContestData.get(0).getEvent_names());
+            //Log.i("ROW1:",cursor.getInt(cursor.getColumnIndex(Helper.KEY))+"\n"+cursor.getString(cursor.getColumnIndex(Helper.CON_NAME))+"\n"+cursor.getString(cursor.getColumnIndex(Helper.EVENT_START_TIME)));
+
 
         }
+        cursor.close();
     }
     public void show_data()
     {
-        String[] columns={KEY,CON_NAME,Helper.EVENT_START_TIME};
-        Cursor cursor=MainActivity.db.query(Helper.TABLE_NAME,columns,null,null,null,null,null);
+        String[] columns={Helper.KEY,Helper.CON_NAME,Helper.EVENT_START_TIME,Helper.EVENT_END_TIME,Helper.EVENT_DURATION,Helper.EVENT_URL};
+        Cursor cursor=MainActivity.db.query(Helper.TABLE_NAME,null,null,null,null,null,null);
         int i=0;
         while(cursor.moveToNext())
         {
             //retrieved_data.add(new ContestData(cursor.getInt(0),cursor.getString(1),cursor.getString(2)));
-            Log.i("ROW1:",cursor.getInt(cursor.getColumnIndex(KEY))+"\n"+cursor.getString(cursor.getColumnIndex(CON_NAME))+"\n"+cursor.getString(cursor.getColumnIndex(EVENT_START_TIME)));
+            Log.i("ROW1:",cursor.getInt(cursor.getColumnIndex(Helper.KEY))+"\n"+cursor.getString(cursor.getColumnIndex(Helper.CON_NAME))+"\n"+cursor.getString(cursor.getColumnIndex(Helper.EVENT_START_TIME)));
 
         }
     }

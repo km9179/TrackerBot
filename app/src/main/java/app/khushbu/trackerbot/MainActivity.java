@@ -1,14 +1,20 @@
 
 package app.khushbu.trackerbot;
 
+import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.FragmentManager;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -16,6 +22,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,7 +30,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
+
+import static android.content.Context.CONNECTIVITY_SERVICE;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
@@ -34,11 +48,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     static Database.Helper helper;
     static SQLiteDatabase db;
 
+    static boolean isConnected;
 
+    static Map imgId;
     //Button buttonCF;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        new InternetCheck(this).isInternetConnectionAvailable(new InternetCheck.InternetCheckListener() {
+
+            @Override
+            public void onComplete(boolean connected) {
+                //proceed!
+                isConnected=connected;
+            }
+        });
+
         /*setContentView(activity1);
         buttonCF=(Button)findViewById(R.id.codeforces);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -68,8 +94,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         */
         setContentView(R.layout.home_screen_layout);
+
+        imgId = new TreeMap();
+        imgId.put(1,R.drawable.codeforces_logo);
+        imgId.put(2,R.drawable.codechef_logo);
+        imgId.put(12,R.drawable.topcoder);
+        imgId.put(73,R.drawable.hackerearth_logo);
+        imgId.put(63,R.drawable.hackerrank);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
 
         /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -91,6 +128,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         helper =new Database.Helper((MainActivity)this);
         db = helper.getWritableDatabase();
+
+
 
     }
     /*    @Override
@@ -103,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return super.onOptionsItemSelected(item);
         }
     */
-    public void onClick(View view) {
+    public void onClick(final View view) {
         /*Intent intent=new Intent(this,Activity2.class);
         String z= "fhb";
         z=view.getTag().toString();
@@ -111,10 +150,63 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
 
         Log.i("button",z);*/
-        FragmentManager man=this.getFragmentManager();
-        CF_Options contest=new CF_Options();
-        CF_Options.tag=(int)Integer.parseInt(view.getTag().toString());
-        contest.show(man,"Dialogue");
+
+        //InternetCheck internetCheck=new InternetCheck();
+        /*new InternetCheck(MainActivity.this).isInternetConnectionAvailable(new InternetCheck.InternetCheckListener() {
+
+            @Override
+            public void onComplete(boolean connected) {
+                //proceed!
+                if(connected) {
+                    FragmentManager man = getFragmentManager();
+                    CF_Options contest = new CF_Options();
+                    CF_Options.tag = (int) Integer.parseInt(view.getTag().toString());
+                    contest.show(man, "Dialogue");
+                }
+                else{
+                     {
+                        final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+
+                        alertDialog.setTitle("NO INTERNET CONNECTION");
+                        alertDialog.setMessage("Please! Check Your Internet Connection");
+                        alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", (DialogInterface.OnClickListener) null);
+
+                        alertDialog.show();
+                    }
+
+                }
+            }
+        });*/
+
+        new InternetCheck(this).isInternetConnectionAvailable(new InternetCheck.InternetCheckListener() {
+
+            @Override
+            public void onComplete(boolean connected) {
+                //proceed!
+                isConnected=connected;
+            }
+        });
+        if(isConnected){
+            FragmentManager man = this.getFragmentManager();
+            CF_Options contest = new CF_Options();
+            CF_Options.tag = (int) Integer.parseInt(view.getTag().toString());
+            contest.show(man, "Dialogue");
+
+        }
+        else{
+            try {
+                final AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+
+                alertDialog.setTitle("NO INTERNET CONNECTION");
+                alertDialog.setMessage("Please! Check Your Internet Connection");
+                alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", (DialogInterface.OnClickListener) null);
+
+                alertDialog.show();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
         //Log.i("xy",view.getTag().toString());
 
     }
@@ -187,5 +279,58 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+}
+
+class InternetCheck extends AsyncTask<Void, Void, Void> {
+
+
+    private Activity activity;
+    private InternetCheckListener listener;
+    boolean b ;
+    public InternetCheck(Activity x){
+
+        activity= x;
+
+    }
+
+    @Override
+    protected Void doInBackground(Void... params) {
+
+
+
+        if(isNetworkAvailable()) {
+            try {
+                Socket sock = new Socket();
+                sock.connect(new InetSocketAddress("8.8.8.8", 53), 1500);
+                sock.close();
+                b = true;
+
+            } catch (IOException e) {
+                b = false;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        listener.onComplete(b);
+    }
+
+    public void isInternetConnectionAvailable(InternetCheckListener x){
+        listener=x;
+        execute();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
+    }
+
+
+    public interface InternetCheckListener{
+        void onComplete(boolean connected);
+    }
 
 }

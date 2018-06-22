@@ -16,7 +16,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.security.AllPermission;
 import java.util.ArrayList;
 
 //import static app.khushbu.trackerbot.RecyclerViewAdapter.Helper.CON_NAME;
@@ -29,6 +28,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ItemClickListener mClickListener;
     Context context;
     Upcoming upcoming;
+    Fav fav;
     //ContentValues values = new ContentValues();
     //Helper helper;
     //SQLiteDatabase db;
@@ -42,6 +42,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.context = context;
         this.id = id;
         upcoming = new Upcoming();
+        fav = new Fav();
         //helper=new Helper(context);
         //db = helper.getWritableDatabase();
         //Helper helper = new Helper(context);
@@ -50,17 +51,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = null;
+        View view=null;
         if (id == 1)
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ongoing_row, parent, false);
         else if (id == 2)
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.upcoming_row, parent, false);
         else if(id==3)
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.upcoming_row, parent, false);
-        else if(id==4)
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ongoing_row,parent,false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.favourite_row, parent, false);
+
         return new ViewHolder(view);
     }
+
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
@@ -116,17 +117,37 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 }
             });
 
-        } else if(id==4) {
-            Time time = new Time();
+        }
+        else if(this.id==3) {
 
-            holder.imageView.setImageResource(ALL_CONTEST_Activity.all_ongoing_contest_list.get(position).getImgId());
-            holder.textView1.setText(ALL_CONTEST_Activity.all_ongoing_contest_list.get(position).getEvent_names());
-            String startTime = time.getCurrentTimeStamp();
-            startTime = startTime.substring(0, 10) + " " + startTime.substring(11, startTime.length());
-            String endTime = ALL_CONTEST_Activity.all_ongoing_contest_list.get(position).getEvent_end_time();
-            endTime = endTime.substring(0, 10) + " " + endTime.substring(11, endTime.length());
+            if (!Fav.is_in_actionMode) {
+                Fav.textToolbar.setVisibility(View.GONE);
+                Fav.favContestData.get(position).setSelected(false);
+                holder.checkBox.setChecked(false);
+                holder.checkBox.setVisibility(View.GONE);
 
-            time.setCountdown(holder.textView2, startTime, endTime);
+            } else {
+                Fav.textToolbar.setVisibility(View.VISIBLE);
+                if (Fav.favContestData.get(position).isSelected()) {
+                    holder.checkBox.setChecked(true);
+                    holder.checkBox.setVisibility(View.VISIBLE);
+                } else {
+                    holder.checkBox.setChecked(false);
+                    holder.checkBox.setVisibility(View.GONE);
+                }
+            }
+            holder.imageView.setImageResource(Fav.favContestData.get(position).getImgId());
+            holder.textView1.setText(Fav.favContestData.get(position).getEvent_names());
+            String z = Fav.favContestData.get(position).getEvent_start_time();
+            holder.textView2.setText(z);
+
+
+            holder.checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fav.prepareSelection(v, position);
+                }
+            });
 
         }
 
@@ -168,10 +189,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             return Ongoing.ongoingContestData.size();
         else if(this.id==2)
             return Upcoming.upcomingContestData.size();
-        else if(id==3)
-            return Database.retrieved_data.size();
-        else
-            return ALL_CONTEST_Activity.all_ongoing_contest_list.size();
+        else if(this.id==3)
+            return Fav.favContestData.size();
+        return 0;
     }
 
 
@@ -218,12 +238,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     ContestData getItem(int id) {
         if (this.id == 1)
             return Ongoing.ongoingContestData.get(id);
-        else if (id == 2)
+        else if (this.id == 2)
             return Upcoming.upcomingContestData.get(id);
-        else if(id==3)
-            return Database.retrieved_data.get(id);
-        else
-            return ALL_CONTEST_Activity.all_ongoing_contest_list.get(id);
+        else if(this.id==3)
+            return Fav.favContestData.get(id);
+        return null;
 
     }
 
