@@ -11,6 +11,7 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import static app.khushbu.trackerbot.Database.Helper.CON_NAME;
+import static app.khushbu.trackerbot.Database.Helper.EVENT_START_TIME;
 import static app.khushbu.trackerbot.Database.Helper.KEY;
 
 public class Database {
@@ -34,7 +35,7 @@ public class Database {
         return true;
     }
 
-    public long insert(String contest_name,int key_val,String date_time)
+    public long insert(String contest_name,int key_val,String date_time,String end_time,int duration,String url)
     {
         //int query=("SELECT EXISTS(SELECT "+helper.CON_NAME+" FROM "+helper.TABLE_NAME+" WHERE "+helper.CON_NAME+" = "+contest_name+" ;")
         //Cursor cur=db.rawQuery(query,null);
@@ -56,7 +57,10 @@ public class Database {
         else {
             values.put(KEY, key_val);
             values.put(CON_NAME, contest_name);
-            values.put(Helper.DATE_TIME, date_time);
+            values.put(Helper.EVENT_START_TIME, date_time);
+            values.put(Helper.EVENT_END_TIME,end_time);
+            values.put(Helper.EVENT_DURATION,duration);
+            values.put(Helper.EVENT_URL,url);
             long idd = MainActivity.db.insert(Helper.TABLE_NAME, null, values);
 
             return idd;
@@ -65,7 +69,7 @@ public class Database {
     }
 
     public void deleteRow(String currentTime){
-        String statement = "DELETE FROM "+Helper.TABLE_NAME+" WHERE "+Helper.DATE_TIME+" <= '"+new Time().getCurrentTimeStamp()+"'";
+        String statement = "DELETE FROM "+Helper.TABLE_NAME+" WHERE "+Helper.EVENT_START_TIME+" <= '"+new Time().getCurrentTimeStamp()+"'";
         Cursor c=MainActivity.db.rawQuery(statement,null);
         while(c.moveToNext()){
             Log.i("deletable",c.getString(1));
@@ -80,24 +84,24 @@ public class Database {
     }
     public void getData()
     {
-        String[] columns={KEY,CON_NAME,Helper.DATE_TIME};
+        String[] columns={KEY,CON_NAME,Helper.EVENT_START_TIME};
         Cursor cursor=MainActivity.db.query(Helper.TABLE_NAME,columns,null,null,null,null,null);
         int i=0;
         while(cursor.moveToNext())
         {
-            retrieved_data.add(new ContestData(cursor.getInt(0),cursor.getString(1),cursor.getString(2)));
+            retrieved_data.add(new ContestData(cursor.getInt(cursor.getColumnIndex(KEY)),cursor.getString(cursor.getColumnIndex(CON_NAME)),cursor.getString(cursor.getColumnIndex(EVENT_START_TIME))));
 
         }
     }
     public void show_data()
     {
-        String[] columns={KEY,CON_NAME,Helper.DATE_TIME};
+        String[] columns={KEY,CON_NAME,Helper.EVENT_START_TIME};
         Cursor cursor=MainActivity.db.query(Helper.TABLE_NAME,columns,null,null,null,null,null);
         int i=0;
         while(cursor.moveToNext())
         {
             //retrieved_data.add(new ContestData(cursor.getInt(0),cursor.getString(1),cursor.getString(2)));
-            Log.i("ROW1:",cursor.getInt(0)+"\n"+cursor.getString(1)+"\n"+cursor.getString(2));
+            Log.i("ROW1:",cursor.getInt(cursor.getColumnIndex(KEY))+"\n"+cursor.getString(cursor.getColumnIndex(CON_NAME))+"\n"+cursor.getString(cursor.getColumnIndex(EVENT_START_TIME)));
 
         }
     }
@@ -110,13 +114,16 @@ public class Database {
 
         public static final String DATABASE_NAME = "tbdatabase";
         public static final String TABLE_NAME = "TBTABLE";
-        public static final int DATABASE_VERSION = 4;
-        public static final String KEY = "key";
-        public static final String CON_NAME = "contest";
-        public static final String DATE_TIME="DateTime";
-        // private static final String PLAT_NAME="codeforces";
+        public static final int DATABASE_VERSION = 5;
+        public static final String KEY = "key";     //KEY is storing IMG_ID for contest logo.
+        public static final String CON_NAME = "contest";  //CONTEST NAME.
+        public static final String EVENT_START_TIME="Event_Start_Time";
+        public static final String EVENT_END_TIME="Event_End_Time";
+        public static final String EVENT_URL="Event_url";
+        public static final String EVENT_DURATION="Event_Duration";
 
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" + KEY + " INTEGER, " + CON_NAME + " VARCHAR(255)," +DATE_TIME+" VARCHAR(255));";
+
+        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" + KEY + " INTEGER, " + CON_NAME + " VARCHAR(255)," +EVENT_START_TIME+" VARCHAR(255)," +EVENT_END_TIME+" VARCHAR(255)," +EVENT_DURATION+" INTEGER," +EVENT_URL+" VARCHAR(255));";
         public Context context;
         public static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
 

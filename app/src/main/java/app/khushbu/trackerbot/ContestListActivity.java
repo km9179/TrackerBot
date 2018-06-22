@@ -171,7 +171,7 @@ public class ContestListActivity extends AppCompatActivity {
             for(int i=0;i<Upcoming.selectedContest.size();i++)
             {
 
-                long iddd=database.insert(Upcoming.selectedContest.get(i).getEvent_names(),Upcoming.selectedContest.get(i).getImgId(),Upcoming.selectedContest.get(i).getEvent_start_time());
+                long iddd=database.insert(Upcoming.selectedContest.get(i).getEvent_names(),Upcoming.selectedContest.get(i).getImgId(),Upcoming.selectedContest.get(i).getEvent_start_time(),Upcoming.selectedContest.get(i).getEvent_end_time(),Upcoming.selectedContest.get(i).getEvent_duration(),Upcoming.selectedContest.get(i).getEvent_url());
                 Message.message(this,"Inserted Data");
             }
             //mainActivity.getData();
