@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ public class Fav extends AppCompatActivity implements RecyclerViewAdapter.ItemCl
     Toolbar toolbar;
     static TextView textToolbar;
     static boolean is_in_actionMode;
+    static CheckBox toolbarCheckbox;
 
     Database database;
     //UpdateDatabase updateDatabase;
@@ -57,7 +59,9 @@ public class Fav extends AppCompatActivity implements RecyclerViewAdapter.ItemCl
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         textToolbar=(TextView)toolbar.findViewById(R.id.textToolbar);
-
+        toolbarCheckbox =(CheckBox)toolbar.findViewById(R.id.toolbarCheckBox);
+        toolbarCheckbox.setChecked(false);
+        toolbarCheckbox.setVisibility(View.GONE);
         counter=0;
 
         database =new Database();
@@ -82,6 +86,7 @@ public class Fav extends AppCompatActivity implements RecyclerViewAdapter.ItemCl
         if(!is_in_actionMode){
 
             changeMenu(1);
+            toolbarCheckbox.setVisibility(View.VISIBLE);
             textToolbar.setVisibility(View.VISIBLE);
             is_in_actionMode=true;
             setLayoutScrollFlags(1);
@@ -162,13 +167,15 @@ public class Fav extends AppCompatActivity implements RecyclerViewAdapter.ItemCl
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_delete) {
 
-            Database database =new Database();
+            database.show_data();
             for(int i=0;i<favSelectedContestData.size();i++){
                 favContestData.remove(favSelectedContestData.get(i));
                 database.deleteTitle(favSelectedContestData.get(i).getEvent_names());
-                //database.deleteRow("0");
-                //updateDatabase.execute();
+
+
             }
+            Log.i("ROW1-msg","deleted");
+            database.show_data();
 
 
             clearActionMode();
@@ -189,8 +196,10 @@ public class Fav extends AppCompatActivity implements RecyclerViewAdapter.ItemCl
         changeMenu(2);
         is_in_actionMode=false;
         this.mAdapter.notifyDataSetChanged();
-        //favSelectedContestData.clear();
+        favSelectedContestData.clear();
         textToolbar.setVisibility(View.GONE);
+        toolbarCheckbox.setChecked(false);
+        toolbarCheckbox.setVisibility(View.GONE);
         counter = 0;
         setLayoutScrollFlags(2);
     }
@@ -229,6 +238,15 @@ public class Fav extends AppCompatActivity implements RecyclerViewAdapter.ItemCl
         else{
             //Log.i("url",upcomingContestData.get(position).getEvent_url());
 
+            new InternetCheck(this).isInternetConnectionAvailable(new InternetCheck.InternetCheckListener() {
+
+                @Override
+                public void onComplete(boolean connected) {
+
+                    MainActivity.isConnected=connected;
+                }
+            });
+
             Intent intent=new Intent(Fav.this,WebActivity.class);
             intent.putExtra("url",favContestData.get(position).getEvent_url());
             startActivity(intent);
@@ -236,32 +254,40 @@ public class Fav extends AppCompatActivity implements RecyclerViewAdapter.ItemCl
         }
     }
 
-    /*class UpdateDatabase extends AsyncTask<Void,Void,Void> {
+    @Override
+    public void onBackPressed() {
+        if(is_in_actionMode){
+            clearActionMode();
 
-        @Override
-        protected Void doInBackground(Void... voids) {
-            for(int i=0;i<Upcoming.selectedContest.size();i++)
-            {
-                //Fav.favContestData.add(Upcoming.selectedContest.get(i));
-                try {
-                    for(int j=0;j<favSelectedContestData.size();i++){
-                        database.deleteTitle(favSelectedContestData.get(i).getEvent_names());
-                        //database.deleteRow("0");
-                    }
-                }
-                catch (Exception e){
-                    String errorString = favSelectedContestData.get(i).getEvent_names();
-                    errorString = errorString.replace("'","''");
-                    //errorString =errorString.replaceAll("\"","\"");
-                    //errorString = StringEscapeUtils.escapeJava(errorString);
-                    favSelectedContestData.get(i).setEvent_names(errorString);
-                    //long iddd = database.insert(Upcoming.selectedContest.get(i).getEvent_names(), Upcoming.selectedContest.get(i).getImgId(), Upcoming.selectedContest.get(i).getEvent_start_time(), Upcoming.selectedContest.get(i).getEvent_end_time(), Upcoming.selectedContest.get(i).getEvent_duration(), Upcoming.selectedContest.get(i).getEvent_url());
-                    database.deleteTitle(favSelectedContestData.get(i).getEvent_names());
-                }
-                //Message.message(ContestListActivity.this,"Inserted Data");
-            }
-            favSelectedContestData.clear();
-            return null;
         }
-    }*/
+        else
+            super.onBackPressed();
+    }
+
+    public void onToolbarCheckBoxClick(View view){
+        toolbarCheckbox =(CheckBox)view;
+        if(toolbarCheckbox.isChecked()){
+            for(int i=0;i<mAdapter.getItemCount();i++){
+                if(!mAdapter.getItem(i).isSelected()) {
+                    mAdapter.getItem(i).setSelected(true);
+                    favSelectedContestData.add(mAdapter.getItem(i));
+                    counter+=1;
+                }
+                mAdapter.notifyDataSetChanged();
+                updateCounter(counter);
+            }
+        }
+        else{
+            for(int i=0;i<mAdapter.getItemCount();i++){
+                if(mAdapter.getItem(i).isSelected()) {
+                    mAdapter.getItem(i).setSelected(false);
+                    favSelectedContestData.remove(mAdapter.getItem(i));
+                    counter -= 1;
+                }
+                mAdapter.notifyDataSetChanged();
+
+                updateCounter(counter);
+            }
+        }
+    }
 }

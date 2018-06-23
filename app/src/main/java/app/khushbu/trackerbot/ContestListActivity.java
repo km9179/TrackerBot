@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,7 @@ public class ContestListActivity extends AppCompatActivity {
 
     Toolbar toolbar;
     static TextView textToolbar;
+    static CheckBox toolbarCheckbox;
 
     TabLayout tabLayout;
     Database database;
@@ -85,6 +87,10 @@ public class ContestListActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
         textToolbar=(TextView)toolbar.findViewById(R.id.textToolbar);
+        toolbarCheckbox = (CheckBox)toolbar.findViewById(R.id.toolbarCheckBox);
+        toolbarCheckbox.setChecked(false);
+        toolbarCheckbox.setVisibility(View.GONE);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -237,6 +243,9 @@ public class ContestListActivity extends AppCompatActivity {
         //Upcoming.selectedContest.clear();
         Upcoming.counter = 0;
         setLayoutScrollFlags(2);
+        textToolbar.setVisibility(View.GONE);
+        toolbarCheckbox.setChecked(false);
+        toolbarCheckbox.setVisibility(View.GONE);
     }
 
     public void setLayoutScrollFlags(int id){
@@ -248,6 +257,33 @@ public class ContestListActivity extends AppCompatActivity {
         else{
             toolbarParams.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
                     | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
+        }
+    }
+
+    public void onToolbarCheckBoxClick(View view) {
+        toolbarCheckbox =(CheckBox)view;
+        if(toolbarCheckbox.isChecked()){
+            for(int i=0;i<Upcoming.adapter.getItemCount();i++){
+                if(!Upcoming.adapter.getItem(i).isSelected()) {
+                    Upcoming.adapter.getItem(i).setSelected(true);
+                    Upcoming.selectedContest.add(Upcoming.adapter.getItem(i));
+                    Upcoming.counter+=1;
+                }
+                Upcoming.adapter.notifyDataSetChanged();
+                Upcoming.updateCounter(Upcoming.counter);
+            }
+        }
+        else{
+            for(int i=0;i<Upcoming.adapter.getItemCount();i++){
+                if(Upcoming.adapter.getItem(i).isSelected()) {
+                    Upcoming.adapter.getItem(i).setSelected(false);
+                    Upcoming.selectedContest.remove(Upcoming.adapter.getItem(i));
+                    Upcoming.counter -= 1;
+                }
+                Upcoming.adapter.notifyDataSetChanged();
+
+                Upcoming.updateCounter(Upcoming.counter);
+            }
         }
     }
 

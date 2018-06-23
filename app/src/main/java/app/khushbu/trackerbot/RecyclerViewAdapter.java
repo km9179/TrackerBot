@@ -91,6 +91,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             if (!Upcoming.is_in_actionMode) {
                 ContestListActivity.textToolbar.setVisibility(View.GONE);
                 Upcoming.upcomingContestData.get(position).setSelected(false);
+                ContestListActivity.toolbarCheckbox.setChecked(false);
+                ContestListActivity.toolbarCheckbox.setVisibility(View.GONE);
                 holder.checkBox.setChecked(false);
                 holder.checkBox.setVisibility(View.GONE);
 
@@ -123,6 +125,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             if (!Fav.is_in_actionMode) {
                 Fav.textToolbar.setVisibility(View.GONE);
                 Fav.favContestData.get(position).setSelected(false);
+                Fav.toolbarCheckbox.setChecked(false);
+                Fav.toolbarCheckbox.setVisibility(View.GONE);
                 holder.checkBox.setChecked(false);
                 holder.checkBox.setVisibility(View.GONE);
 

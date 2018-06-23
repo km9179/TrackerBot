@@ -60,12 +60,9 @@ public class Database {
 
     }
 
-    public void deleteRow(String currentTime){
-        String statement = "DELETE FROM "+Helper.TABLE_NAME+" WHERE "+Helper.EVENT_START_TIME+" <= '"+currentTime+"'";
-        //String statement = "DELETE FROM "+Helper.TABLE_NAME;
-        Cursor c=MainActivity.db.rawQuery(statement,null);
+    public boolean deleteRow(String currentTime){
 
-
+        return MainActivity.db.delete(Helper.TABLE_NAME, Helper.EVENT_START_TIME+" > '"+currentTime+"'",null)>0;
 
     }
 

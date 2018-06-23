@@ -26,10 +26,19 @@
             app:title="">
 
             <TextView
+                android:layout_gravity="start"
                 android:id="@+id/textToolbar"
+                android:layout_weight="1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"/>
+            <CheckBox
+                android:layout_gravity="end"
+                android:id="@+id/toolbarCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="#000000"
+                android:onClick="onToolbarCheckBoxClick"/>
 
         </android.support.v7.widget.Toolbar>
 

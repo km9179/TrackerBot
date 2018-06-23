@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ContestListActivity">
+    tools:context=".Fav">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -24,14 +24,29 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:title="Favourites">
+           <!-- <LinearLayout
+                android:id="@+id/toolbarLinearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+               --> <TextView
+                    android:layout_gravity="start"
+                    android:id="@+id/textToolbar"
+                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"/>
 
-            <TextView
-                android:id="@+id/textToolbar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"/>
+                <CheckBox
+                    android:layout_gravity="end"
+                    android:id="@+id/toolbarCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="#000000"
+                    android:onClick="onToolbarCheckBoxClick"/>
 
         </android.support.v7.widget.Toolbar>
+
+
 
     </android.support.design.widget.AppBarLayout>
 

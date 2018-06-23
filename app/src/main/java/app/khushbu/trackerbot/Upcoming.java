@@ -41,14 +41,14 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*new InternetCheck(getActivity()).isInternetConnectionAvailable(new InternetCheck.InternetCheckListener() {
+        new InternetCheck(getActivity()).isInternetConnectionAvailable(new InternetCheck.InternetCheckListener() {
 
             @Override
             public void onComplete(boolean connected) {
                 //proceed!
                 MainActivity.isConnected=connected;
             }
-        });*/
+        });
         counter=0;
         is_in_actionMode=false;
     }
@@ -104,6 +104,7 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
             swipeRefreshLayout.setEnabled(false);
             activity.changeMenu(1);
             ContestListActivity.textToolbar.setVisibility(View.VISIBLE);
+            ContestListActivity.toolbarCheckbox.setVisibility(View.VISIBLE);
             is_in_actionMode = true;
             //adapter.notifyDataSetChanged();
             activity.setLayoutScrollFlags(1);
@@ -151,6 +152,15 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
         else{
             //Log.i("url",upcomingContestData.get(position).getEvent_url());
 
+            new InternetCheck(getActivity()).isInternetConnectionAvailable(new InternetCheck.InternetCheckListener() {
+
+                @Override
+                public void onComplete(boolean connected) {
+
+                    MainActivity.isConnected=connected;
+                }
+            });
+
             Intent intent=new Intent(getContext(),WebActivity.class);
             intent.putExtra("url",upcomingContestData.get(position).getEvent_url());
             startActivity(intent);
@@ -176,7 +186,7 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
 
     }
 
-    public void updateCounter(int counter){
+    public static void updateCounter(int counter){
         if(counter==0) {
             ContestListActivity.textToolbar.setText("0");
         }
