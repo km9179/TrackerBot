@@ -9,7 +9,7 @@
 
     <Button
         android:id="@+id/contests"
-        android:background="#2f4f4f"
+        android:background="#5f9f9f"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -17,5 +17,14 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="55dp"
         android:text="Contests-->" />
+
+    <Button
+        android:id="@+id/calender"
+        android:background="#2f4f4f"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_below="@+id/contests"
+        android:text="Calender-->" />
 
 </RelativeLayout>
