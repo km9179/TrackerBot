@@ -1,14 +1,9 @@
 package app.khushbu.trackerbot;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.os.CountDownTimer;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +11,12 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
-//import static app.khushbu.trackerbot.RecyclerViewAdapter.Helper.CON_NAME;
-//import static app.khushbu.trackerbot.RecyclerViewAdapter.Helper.KEY;
 
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
@@ -29,10 +26,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     Context context;
     Upcoming upcoming;
     Fav fav;
-    //ContentValues values = new ContentValues();
-    //Helper helper;
-    //SQLiteDatabase db;
-    public static ArrayList<ContestData> retrieved_data = new ArrayList<>();
+
 
 
     int id;   //id for identifying fragment------->1 = ongoing fragment and 2 = upcoming fragment
@@ -43,9 +37,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.id = id;
         upcoming = new Upcoming();
         fav = new Fav();
-        //helper=new Helper(context);
-        //db = helper.getWritableDatabase();
-        //Helper helper = new Helper(context);
     }
 
     // inflates the row layout from xml when needed
@@ -58,7 +49,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.upcoming_row, parent, false);
         else if(id==3)
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.favourite_row, parent, false);
+        else if(id==4) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ongoing_row, parent, false);
 
+        }
         return new ViewHolder(view);
     }
 
@@ -82,7 +76,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             String endTime = Ongoing.ongoingContestData.get(position).getEvent_end_time();
             endTime = endTime.substring(0, 10) + " " + endTime.substring(11, endTime.length());
 
-            time.setCountdown(holder.textView2, startTime, endTime);
+            if(holder.cdt != null)
+                holder.cdt.cancel();
+            holder.update(holder.textView2, startTime, endTime);
 
 
         } else if (id == 2) {
@@ -121,6 +117,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         }
         else if(this.id==3) {
+            // Favourites
 
             if (!Fav.is_in_actionMode) {
                 Fav.textToolbar.setVisibility(View.GONE);
@@ -154,36 +151,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             });
 
         }
+        else if(id==4){
 
-        //View itv;
-        // helper=new Helper(context);
+            //All ongoing contest
 
-        //holder.textView.setText(Upcoming.event_names.get(position));
-        /*holder.v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                ColorDrawable cd = (ColorDrawable) v.getBackground();
-                int colorCode = cd.getColor();
-                if (colorCode == Color.parseColor("#9be9f0")) {
-                    v.setBackgroundColor(Color.parseColor("#ffffff"));
-                    String selection = CON_NAME + " LIKE ?";
-                    String[] selectionArgs = {};
-
-                }
+            holder.textView1.setText(ALL_CONTEST_Activity.allContestList.get(position).getEvent_names());
+            holder.textView2.setText(ALL_CONTEST_Activity.allContestList.get(position).getEvent_end_time());
+            if(holder.cdt != null){
+                holder.cdt.cancel();
             }
-        });
-        //itvv=holder.itv;
+            String startTime = new Time().getCurrentTimeStamp();
+            startTime = startTime.substring(0, 10) + " " + startTime.substring(11, startTime.length());
+            String endTime = ALL_CONTEST_Activity.allContestList.get(position).getEvent_end_time();
+            endTime = endTime.substring(0, 10) + " " + endTime.substring(11, endTime.length());
 
-        holder.v.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                view.setBackgroundColor(Color.parseColor("#9be9f0"));
-                //values.put(CON_NAME, Upcoming.event_names.get(position));
-               // db.insert(TABLE_NAME, null, values);
-                return true;// returning true instead of false, works for me
-            }
-        });*/
+            holder.update(holder.textView2, startTime, endTime);
+        }
+
+
     }
 
     // total number of rows
@@ -195,6 +180,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             return Upcoming.upcomingContestData.size();
         else if(this.id==3)
             return Fav.favContestData.size();
+        else if(this.id==4)
+            return ALL_CONTEST_Activity.allContestList.size();
         return 0;
     }
 
@@ -206,7 +193,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         View v;
         CardView cardView;
         CheckBox checkBox;
-
+        CountDownTimer cdt;
         ViewHolder(View itemView) {
             super(itemView);
             v = itemView;
@@ -236,6 +223,49 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 mClickListener.onClick(v, getAdapterPosition());
             }
         }
+
+        public void update(final TextView textView, String start_time, String end_time){
+            Calendar start_calendar = Calendar.getInstance();
+            Calendar end_calendar = Calendar.getInstance();
+
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
+            try {
+                start_calendar.setTime(sdf.parse(start_time));
+                end_calendar.setTime(sdf.parse(end_time));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            long start_millis = start_calendar.getTimeInMillis(); //get the start time in milliseconds
+            long end_millis = end_calendar.getTimeInMillis(); //get the end time in milliseconds
+            long total_millis = (end_millis - start_millis); //total time in milliseconds
+            end_calendar.set(2015, 10, 6); // 10 = November, month start at 0 = January
+
+            //1000 = 1 second interval
+            cdt = new CountDownTimer(total_millis, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    long days = TimeUnit.MILLISECONDS.toDays(millisUntilFinished);
+                    millisUntilFinished -= TimeUnit.DAYS.toMillis(days);
+
+                    long hours = TimeUnit.MILLISECONDS.toHours(millisUntilFinished);
+                    millisUntilFinished -= TimeUnit.HOURS.toMillis(hours);
+
+                    long minutes = TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished);
+                    millisUntilFinished -= TimeUnit.MINUTES.toMillis(minutes);
+
+                    long seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
+
+                    textView.setText(days + ":" + hours + ":" + minutes + ":" + seconds); //You can compute the millisUntilFinished on hours/minutes/seconds
+                }
+
+                @Override
+                public void onFinish() {
+                    textView.setText("Finish!");
+                }
+            };
+            cdt.start();
+        }
     }
 
     // convenience method for getting data at click position
@@ -246,6 +276,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             return Upcoming.upcomingContestData.get(id);
         else if(this.id==3)
             return Fav.favContestData.get(id);
+        else if(this.id==4)
+            return ALL_CONTEST_Activity.allContestList.get(id);
         return null;
 
     }
@@ -262,213 +294,3 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         void onClick(View view, int position);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-    public boolean CheckIsDataAlreadyInDBorNot(String TableName,
-                                                      String col_name_val, String con_name) {
-
-        String Query = "Select * from " + TableName + " where " + col_name_val + " = '" + con_name+"'";
-        Cursor cursor = MainActivity.db.rawQuery(Query, null);
-        if(cursor.getCount() <= 0){
-            cursor.close();
-            return false;
-        }
-        cursor.close();
-        return true;
-    }
-
-    public long insert(String contest_name,int key_val,String date_time)
-    {
-        //int query=("SELECT EXISTS(SELECT "+helper.CON_NAME+" FROM "+helper.TABLE_NAME+" WHERE "+helper.CON_NAME+" = "+contest_name+" ;")
-        //Cursor cur=db.rawQuery(query,null);
-       // if(query==0) {
-        //if(CheckIsDataAlreadyInDBorNot(Helper.TABLE_NAME,Helper.CON_NAME,contest_name)) {
-        //    return -1;
-
-        //}
-        //}
-        //else
-
-
-        if(CheckIsDataAlreadyInDBorNot(Helper.TABLE_NAME,Helper.CON_NAME,contest_name)){
-            Log.i("ROW1-msg","exists");
-            return -1;
-
-
-        }
-        else {
-            values.put(Helper.KEY, key_val);
-            values.put(Helper.CON_NAME, contest_name);
-            values.put(Helper.DATE_TIME, date_time);
-            long idd = MainActivity.db.insert(Helper.TABLE_NAME, null, values);
-
-            return idd;
-        }
-
-    }
-
-    public void deleteRow(String currentTime){
-        String statement = "DELETE FROM "+Helper.TABLE_NAME+" WHERE "+Helper.DATE_TIME+" <= '"+new Time().getCurrentTimeStamp()+"'";
-        Cursor c=MainActivity.db.rawQuery(statement,null);
-        while(c.moveToNext()){
-            Log.i("deletable",c.getString(1));
-        }
-
-
-    }
-
-    public boolean deleteTitle(String name)
-    {
-        return MainActivity.db.delete(Helper.TABLE_NAME, Helper.CON_NAME + "=" + name, null) > 0;
-    }
-    public void getData()
-    {
-        String[] columns={KEY,CON_NAME,Helper.DATE_TIME};
-        Cursor cursor=MainActivity.db.query(Helper.TABLE_NAME,columns,null,null,null,null,null);
-        int i=0;
-        while(cursor.moveToNext())
-        {
-            retrieved_data.add(new ContestData(cursor.getInt(0),cursor.getString(1),cursor.getString(2)));
-
-        }
-    }
-    public void show_data()
-    {
-        String[] columns={KEY,CON_NAME,Helper.DATE_TIME};
-        Cursor cursor=MainActivity.db.query(Helper.TABLE_NAME,columns,null,null,null,null,null);
-        int i=0;
-        while(cursor.moveToNext())
-        {
-            //retrieved_data.add(new ContestData(cursor.getInt(0),cursor.getString(1),cursor.getString(2)));
-            Log.i("ROW1:",cursor.getInt(0)+"\n"+cursor.getString(1)+"\n"+cursor.getString(2));
-
-        }
-    }
-
-
-
-
-
-    static class Helper extends SQLiteOpenHelper {
-
-        public static final String DATABASE_NAME = "tbdatabase";
-        public static final String TABLE_NAME = "TBTABLE";
-        public static final int DATABASE_VERSION = 4;
-        public static final String KEY = "key";
-        public static final String CON_NAME = "contest";
-        public static final String DATE_TIME="DateTime";
-        // private static final String PLAT_NAME="codeforces";
-
-        public static final String CREATE_TABLE = "CREATE TABLE " + TABLE_NAME + "(" + KEY + " INTEGER, " + CON_NAME + " VARCHAR(255)," +DATE_TIME+" VARCHAR(255));";
-        public Context context;
-        public static final String DROP_TABLE = "DROP TABLE IF EXISTS " + TABLE_NAME;
-
-        public Helper(Context context) {
-            super(context, DATABASE_NAME, null, DATABASE_VERSION);
-            this.context = context;
-            Message.message(context,"CONSTRUCTOR WAS CALLED");
-            Log.i("Constructor", "Called");
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            try {
-                db.execSQL(CREATE_TABLE);
-                Message.message(context,"DB CREATED");
-                Log.i("CREATE", "create was called");
-            } catch (SQLException e) {
-                Message.message(context,""+e);
-            }
-
-
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-            try {
-                db.execSQL(DROP_TABLE);
-                 Message.message(context,"TABLE DROPPED");
-                onCreate(db);
-                Message.message(context,"TABLE RECREATED");
-                Log.i("UPGRADE", "On upgrade called");
-            } catch (SQLException e) {
-                Message.message(context,""+e);
-            }
-
-
-        }
-
-    }
-    /*
-
-import android.content.Context;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
-public class Helper extends SQLiteOpenHelper {
-
-    public static final String DATABASE_NAME="tbdatabase";
-    public static final String TABLE_NAME="TBTABLE";
-    public static final int DATABASE_VERSION=2;
-    public static final String KEY="key";
-    public static final String CON_NAME="contest";
-    // private static final String PLAT_NAME="codeforces";
-
-    private static final  String CREATE_TABLE="CREATE TABLE "+TABLE_NAME+"("+KEY+" VARCHAR(255), "+CON_NAME+" VARCHAR(255));";
-    private Context context;
-    private static final String DROP_TABLE="DROP TABLE IF EXISTS "+TABLE_NAME;
-
-    public Helper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.context=context;
-        //Message.message(context,"CONSTRUCTOR WAS CALLED");
-        Log.i("Constructor","Called");
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        try {
-            db.execSQL(CREATE_TABLE);
-           // Message.message(context,"DB CREATED");
-            Log.i("CREATE","create was called");
-        } catch (SQLException e) {
-            //Message.message(context,""+e);
-        }
-
-
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        try {
-            db.execSQL(DROP_TABLE);
-           // Message.message(context,"TABLE DROPPED");
-            onCreate(db);
-            //Message.message(context,"TABLE RECREATED");
-            Log.i("UPGRADE","On upgrade called");
-        } catch (SQLException e) {
-            //Message.message(context,""+e);
-        }
-
-
-    }
-}
-     */
-//}
-

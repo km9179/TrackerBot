@@ -6,7 +6,9 @@ public class ContestData {
     private String event_url;
     private String event_start_time;
     private String event_end_time;
+    private String site_name;
     private int event_duration;
+    private int site_key;
     private int imgId;
     private boolean isSelected;
 
@@ -78,5 +80,22 @@ public class ContestData {
     public void setSelected(boolean selected) {
         isSelected = selected;
     }
+
+    public int getSite_key() {
+        return site_key;
+    }
+
+    public void setSite_key(int site_key) {
+        this.site_key = site_key;
+    }
+
+    public String getSite_name() {
+        return site_name;
+    }
+
+    public void setSite_name(String site_name) {
+        this.site_name = site_name;
+    }
 }
+
 

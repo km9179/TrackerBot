@@ -1,26 +1,18 @@
 package app.khushbu.trackerbot;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -49,6 +41,7 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
                 MainActivity.isConnected=connected;
             }
         });
+
         counter=0;
         is_in_actionMode=false;
     }
@@ -58,21 +51,18 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View rootView=inflater.inflate(R.layout.upcoming,container,false);
 
-        /*ListView listView=(ListView)rootView.findViewById(R.id.listView);
-        adapter=new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,event_names);
-        listView.setAdapter(adapter);*/
 
-        //toolbar=(Toolbar)((AppCompatActivity)getActivity()).getSupportActionBar().getCustomView().findViewById(R.id.toolbar);
-        //textToolbar=(TextView)toolbar.findViewById(R.id.toolbarText);
         RecyclerView recyclerView=(RecyclerView)rootView.findViewById(R.id.upcomingRecyclerView);
         adapter=new RecyclerViewAdapter(getActivity(),2);
         recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
         adapter.setClickListener(this);
         activity=(ContestListActivity)getActivity();
 
         LinearLayoutManager llm=new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(llm);
+
 
         //for refreshing the whole contest list activity on pull
 
@@ -86,9 +76,10 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
 
                     RequestQueue requestQueue = Volley.newRequestQueue(rootView.getContext());
                     DownloadClass downloadClass = new DownloadClass();
-                    downloadClass.formUrl(ContestListActivity.siteKey);
-                    downloadClass.downloadTask(requestQueue, 2);
-                    adapter.notifyDataSetChanged();
+                    downloadClass.downloadTask(requestQueue, 2,ContestListActivity.siteKey);
+                    //downloadClass.setFlag(1);
+                    //downloadClass.downloadTask(requestQueue,1,ContestListActivity.siteKey);
+                    //adapter.notifyDataSetChanged();
                     swipeRefreshLayout.setRefreshing(false);
                 }
             }
@@ -120,14 +111,7 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
 
     @Override
     public void onClick(View view, int position) {
-        /*new InternetCheck(getActivity()).isInternetConnectionAvailable(new InternetCheck.InternetCheckListener() {
 
-            @Override
-            public void onComplete(boolean connected) {
-                //proceed!
-                MainActivity.isConnected=connected;
-            }
-        });*/
         if(is_in_actionMode){
             CheckBox checkBox=(CheckBox) view.findViewById(R.id.checkBox);
             if(checkBox.isChecked()) {
@@ -193,35 +177,4 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
         else
             ContestListActivity.textToolbar.setText(Integer.toString(counter));
     }
-
-
-
-    /*private class MyActionModeCallback implements ActionMode.Callback {
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate(R.menu.menu_contest_list_action_mode,menu);
-            return true;
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            return false;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            is_in_actionMode=false;
-            adapter.notifyDataSetChanged();
-            myActionMode = null;
-
-        }
-
-
-    }*/
-
 }

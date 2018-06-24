@@ -8,12 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -49,6 +46,7 @@ public class Ongoing extends Fragment implements RecyclerViewAdapter.ItemClickLi
         RecyclerView recyclerView=(RecyclerView)rootView.findViewById(R.id.ongoingRecyclerView);
         adapter=new RecyclerViewAdapter(getActivity(),1);
         recyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
 
         adapter.setClickListener(this);
         LinearLayoutManager llm=new LinearLayoutManager(getActivity());
@@ -63,9 +61,7 @@ public class Ongoing extends Fragment implements RecyclerViewAdapter.ItemClickLi
             public void onRefresh() {
                 RequestQueue requestQueue= Volley.newRequestQueue(rootView.getContext());
                 DownloadClass downloadClass=new DownloadClass();
-                downloadClass.formUrl(ContestListActivity.siteKey);
-                downloadClass.downloadTask(requestQueue,1);
-                adapter.notifyDataSetChanged();
+                downloadClass.downloadTask(requestQueue,1,ContestListActivity.siteKey);
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
