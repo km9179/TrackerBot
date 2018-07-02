@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -32,6 +33,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
+import static app.khushbu.trackerbot.CF_Options.tag;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
@@ -160,7 +162,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             FragmentManager man = this.getFragmentManager();
             CF_Options contest = new CF_Options();
-            CF_Options.tag = (int) Integer.parseInt(view.getTag().toString());
+            contest.tag = (int) Integer.parseInt(view.getTag().toString());
+
             contest.show(man, "Dialogue");
 
         }
@@ -220,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        /*if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
 
@@ -232,8 +235,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_send) {
 
-        }
-        else if(id== R.id.nav_fav)
+        }*/
+        if(id== R.id.nav_fav)
         {
             Intent in=new Intent(this,Fav.class);
             startActivity(in);

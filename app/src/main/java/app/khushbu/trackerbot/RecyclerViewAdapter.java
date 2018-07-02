@@ -155,6 +155,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             //All ongoing contest
 
+            holder.imageView.setImageResource(ALL_CONTEST_Activity.allContestList.get(position).getImgId());
             holder.textView1.setText(ALL_CONTEST_Activity.allContestList.get(position).getEvent_names());
             holder.textView2.setText(ALL_CONTEST_Activity.allContestList.get(position).getEvent_end_time());
             if(holder.cdt != null){
