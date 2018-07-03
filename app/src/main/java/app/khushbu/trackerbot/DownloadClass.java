@@ -179,7 +179,7 @@ public class DownloadClass {
                                     contestData.setEvent_duration(eventDuration);
                                     contestData.setSite_key(siteKey);
                                     contestData.setSite_name(siteName);
-                                    contestData.setImgId(Integer.parseInt(MainActivity.imgId.get(siteKey).toString()));
+                                    //contestData.setImgId(Integer.parseInt(MainActivity.imgId.get(siteKey).toString()));
 
                                     ALL_CONTEST_Activity.allContestList.add(contestData);
                                 }
