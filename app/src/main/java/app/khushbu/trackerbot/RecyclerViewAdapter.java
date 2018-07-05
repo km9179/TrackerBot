@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.CountDownTimer;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +51,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         else if(id==3)
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.favourite_row, parent, false);
         else if(id==4) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ongoing_row, parent, false);
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.all_ongoing_row, parent, false);
 
         }
         return new ViewHolder(view);
@@ -155,9 +156,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             //All ongoing contest
 
-            holder.imageView.setImageResource(ALL_CONTEST_Activity.allContestList.get(position).getImgId());
+            //holder.imageView.setImageResource(ALL_CONTEST_Activity.allContestList.get(position).getImgId());
             holder.textView1.setText(ALL_CONTEST_Activity.allContestList.get(position).getEvent_names());
             holder.textView2.setText(ALL_CONTEST_Activity.allContestList.get(position).getEvent_end_time());
+            holder.siteName.setText(ALL_CONTEST_Activity.allContestList.get(position).getSite_name());
             if(holder.cdt != null){
                 holder.cdt.cancel();
             }
@@ -189,7 +191,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
-        TextView textView1, textView2;
+        TextView textView1, textView2,siteName;
         ImageView imageView;
         View v;
         CardView cardView;
@@ -200,6 +202,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             v = itemView;
             textView1 = (TextView) itemView.findViewById(R.id.name);
             textView2 = (TextView) itemView.findViewById(R.id.time);
+            siteName = (TextView) itemView.findViewById(R.id.siteName);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             cardView = (CardView) itemView.findViewById(R.id.cardView);
             cardView.setOnLongClickListener(this);
@@ -228,7 +231,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public void update(final TextView textView, String start_time, String end_time){
             Calendar start_calendar = Calendar.getInstance();
             Calendar end_calendar = Calendar.getInstance();
+            /*String start_day=start_time.substring(0,10);
+            String end_day =end_time.substring(0,10);
+            SimpleDateFormat sdf;
+            if(!start_day.equals(end_day)){
+                start_time = start_day;
+                end_time = end_day;
+                sdf = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH);
 
+            }*/
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
             try {
                 start_calendar.setTime(sdf.parse(start_time));
@@ -257,12 +268,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                     long seconds = TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished);
 
-                    textView.setText(days + ":" + hours + ":" + minutes + ":" + seconds); //You can compute the millisUntilFinished on hours/minutes/seconds
+                    if (days == 0) {
+                        textView.setText(String.format("%02d",hours) + ":" + String.format("%02d",minutes) + ":" + String.format("%02d",seconds) + "  left"); //You can compute the millisUntilFinished on hours/minutes/seconds
+
+                    }
+                    else if(days == 1){
+                        textView.setText(String.format("%02d",days) + " day left");
+                    }
+                    else{
+                        textView.setText(String.format("%02d",days) + " days left");
+                    }
                 }
 
                 @Override
                 public void onFinish() {
-                    textView.setText("Finish!");
+                    textView.setText("Finished!");
                 }
             };
             cdt.start();

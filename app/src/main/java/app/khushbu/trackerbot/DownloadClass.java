@@ -1,5 +1,7 @@
 package app.khushbu.trackerbot;
 
+import android.util.Log;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -11,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Collections;
+import java.util.regex.Pattern;
 
 public class DownloadClass {
 
@@ -165,6 +168,9 @@ public class DownloadClass {
                         JSONObject object= jsonObject.getJSONObject("resource");
                         int siteKey = object.getInt("id");
                         String siteName = object.getString("name");
+
+                        siteName = siteName.split("\\.")[0];
+                        siteName = siteName.substring(0,1).toUpperCase()+siteName.substring(1,siteName.length());
 
                         String curTime=time.getCurrentTimeStamp();
 
