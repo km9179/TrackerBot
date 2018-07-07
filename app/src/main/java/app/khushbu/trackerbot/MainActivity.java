@@ -240,10 +240,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        } */
+        if (id == R.id.nav_share) {
 
-        }*/
-        if(id== R.id.nav_fav)
+        }
+        else if(id==R.id.nav_contact)
+        {
+
+        }
+        else if(id==R.id.nav_feedback)
+        {
+
+        }
+        else if(id== R.id.nav_fav)
         {
             Intent in=new Intent(this,Fav.class);
             startActivity(in);
