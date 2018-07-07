@@ -118,11 +118,26 @@ public class DownloadClass {
                     }
                     reverse(frag);
                     try {
-                        if (frag == 2)
+                        if (frag == 2) {
                             Upcoming.adapter.notifyDataSetChanged();
+
+                            Upcoming.progressBar.setVisibility(View.GONE);
+
+                            if(Upcoming.upcomingContestData.size() <= 0){
+                                Upcoming.noContestTextView.setVisibility(View.VISIBLE);
+                            }
+                            else{
+                                Upcoming.noContestTextView.setVisibility(View.GONE);
+                            }
+                        }
                         else {
 
-                            Ongoing.adapter.notifyDataSetChanged();
+                            //Ongoing.adapter.notifyDataSetChanged();
+                            Ongoing.progressBar.setVisibility(View.GONE);
+                            if(Ongoing.ongoingContestData.size() <= 0)
+                                Ongoing.noContestTextView.setVisibility(View.VISIBLE);
+                            else
+                                Ongoing.noContestTextView.setVisibility(View.GONE);
 
                         }
                     }

@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
@@ -23,6 +24,10 @@ public class Ongoing extends Fragment implements RecyclerViewAdapter.ItemClickLi
 
     public static ArrayList<ContestData>ongoingContestData =new ArrayList<>();
     public static RecyclerViewAdapter adapter;
+
+    public static TextView noContestTextView;
+    public static ProgressBar progressBar;
+
     //public static RequestQueue requestQueue;
     //public static TextView error_message;
     @Override
@@ -45,6 +50,15 @@ public class Ongoing extends Fragment implements RecyclerViewAdapter.ItemClickLi
         final View rootView=inflater.inflate(R.layout.ongoing,container,false);
 
         RecyclerView recyclerView =(RecyclerView)rootView.findViewById(R.id.ongoingRecyclerView);
+        noContestTextView =(TextView)rootView.findViewById(R.id.noContestText);
+        noContestTextView.setVisibility(View.GONE);
+        progressBar = (ProgressBar)rootView.findViewById(R.id.progressBar);
+        progressBar.setIndeterminate(true);
+        if(ongoingContestData.size() <= 0)
+            progressBar.setVisibility(View.VISIBLE);
+        else
+            progressBar.setVisibility(View.GONE);
+
         //error_message = (TextView)rootView.findViewById(R.id.error_message);
         adapter=new RecyclerViewAdapter(getActivity(),1);
         recyclerView.setAdapter(adapter);
@@ -61,12 +75,17 @@ public class Ongoing extends Fragment implements RecyclerViewAdapter.ItemClickLi
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                progressBar.setVisibility(View.VISIBLE);
+                noContestTextView.setVisibility(View.GONE);
+
                 RequestQueue requestQueue= Volley.newRequestQueue(rootView.getContext());
                 DownloadClass downloadClass=new DownloadClass();
                 downloadClass.downloadTask(requestQueue,1,ContestListActivity.siteKey);
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+        //if(ongoingContestData.size() <= 0)
+          //  noContestTextView.setVisibility(View.VISIBLE);
 
 
         return rootView;
@@ -93,4 +112,5 @@ public class Ongoing extends Fragment implements RecyclerViewAdapter.ItemClickLi
         intent.putExtra("type",1);
         startActivity(intent);
     }
+
 }

@@ -89,7 +89,7 @@ public class Database {
                     cursor.getInt(cursor.getColumnIndex(Helper.EVENT_DURATION)),
                     cursor.getInt(cursor.getColumnIndex(Helper.KEY))
             ));
-            Log.i("msg1",Fav.favContestData.get(0).getEvent_names());
+            //Log.i("msg1",Fav.favContestData.get(0).getEvent_names());
             //Log.i("ROW1:",cursor.getInt(cursor.getColumnIndex(Helper.KEY))+"\n"+cursor.getString(cursor.getColumnIndex(Helper.CON_NAME))+"\n"+cursor.getString(cursor.getColumnIndex(Helper.EVENT_START_TIME)));
 
 

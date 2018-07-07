@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,6 +25,9 @@ public class ALL_CONTEST_Activity extends AppCompatActivity {
         aAdapter=new RecyclerViewAdapter(ALL_CONTEST_Activity.this,4);
         mMRecyclerView.setAdapter(aAdapter);
 
+        Toolbar toolbar =(Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         LinearLayoutManager llm=new LinearLayoutManager(ALL_CONTEST_Activity.this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);

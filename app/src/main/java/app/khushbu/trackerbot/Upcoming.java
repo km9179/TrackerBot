@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -28,6 +30,11 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
     public static RecyclerViewAdapter adapter;
     static SwipeRefreshLayout swipeRefreshLayout;
     static boolean is_in_actionMode;
+
+    public static TextView noContestTextView;
+    public static ProgressBar progressBar;
+    public static int progressBarCounter;
+
 
     ContestListActivity activity;
     @Override
@@ -53,6 +60,16 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
 
 
         RecyclerView recyclerView=(RecyclerView)rootView.findViewById(R.id.upcomingRecyclerView);
+        noContestTextView =(TextView)rootView.findViewById(R.id.noContestText);
+        noContestTextView.setVisibility(View.GONE);
+
+        progressBar = (ProgressBar)rootView.findViewById(R.id.progressBar);
+        progressBar.setIndeterminate(true);
+        if(Upcoming.upcomingContestData.size() <= 0)
+            progressBar.setVisibility(View.VISIBLE);
+        else
+            progressBar.setVisibility(View.GONE);
+
         adapter=new RecyclerViewAdapter(getActivity(),2);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -70,9 +87,13 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                noContestTextView.setVisibility(View.GONE);
                 if(is_in_actionMode)
                     swipeRefreshLayout.setRefreshing(false);
                 else {
+
+                    Upcoming.progressBar.setVisibility(View.VISIBLE);
+                    noContestTextView.setVisibility(View.GONE);
 
                     RequestQueue requestQueue = Volley.newRequestQueue(rootView.getContext());
                     DownloadClass downloadClass = new DownloadClass();
@@ -121,7 +142,6 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
                 checkBox.setVisibility(View.GONE);
                 selectedContest.remove(upcomingContestData.get(position));
                 upcomingContestData.get(position).setSelected(false);
-                Log.i("t","t");
             }
             else{
                 checkBox.setChecked(true);
@@ -129,7 +149,7 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
                 checkBox.setVisibility(View.VISIBLE);
                 selectedContest.add(upcomingContestData.get(position));
                 upcomingContestData.get(position).setSelected(true);
-                Log.i("u","u");
+                //Log.i("u","u");
             }
             updateCounter(counter);
         }
@@ -177,5 +197,14 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
         }
         else
             ContestListActivity.textToolbar.setText(Integer.toString(counter));
+    }
+    public void changeNoContestTextVisibility(int type){
+        if(type == 1){
+            //visibility = gone
+            noContestTextView.setVisibility(View.GONE);
+        }
+        else if(type == 2){
+            noContestTextView.setVisibility(View.VISIBLE);
+        }
     }
 }
