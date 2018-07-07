@@ -13,47 +13,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.Map;
 import java.util.TreeMap;
 
 
 public class CF_Options extends android.app.DialogFragment implements View.OnClickListener{
-    Button cfContest,cfCalender;
-    RelativeLayout dialogue_box1_lay;
+    TextView cfContest,cfCalender;
+    LinearLayout dialogue_box1_lay;
     public static int tag;
-    ImageView img_logo;
     ContestData siteK=new ContestData();
     static Map url;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v=inflater.inflate(R.layout.cf_options_frag,null);
-        cfContest=(Button)v.findViewById(R.id.contests);
-        cfCalender=(Button)v.findViewById(R.id.calender);
-        img_logo=(ImageView)v.findViewById(R.id.logo_view);
-        dialogue_box1_lay=(RelativeLayout)v.findViewById(R.id.Dialogue_box1_root);
-        if(tag==1)
-        {
-            img_logo.setImageResource(R.drawable.codeforces);
-        }
-        else if(tag==2)
-        {
-            img_logo.setImageResource(R.drawable.codechef);
-        }
-        else if(tag==12)
-        {
-            img_logo.setImageResource(R.drawable.topcoder);
-        }
-        else if(tag==73)
-        {
-            img_logo.setImageResource(R.drawable.hackerearth);
-        }
-        else if(tag==63)
-        {
-            img_logo.setImageResource(R.drawable.hackerrank);
-        }
+        cfContest=(TextView) v.findViewById(R.id.contests);
+        cfCalender=(TextView) v.findViewById(R.id.calendar);
+        dialogue_box1_lay=(LinearLayout)v.findViewById(R.id.Dialogue_box1_root);
         cfContest.setOnClickListener(this);
         cfCalender.setOnClickListener(this);
         url=new TreeMap();
@@ -79,7 +59,7 @@ public class CF_Options extends android.app.DialogFragment implements View.OnCli
             startActivity(intent);
             dismiss();
         }
-        else if(id==R.id.calender)
+        else if(id==R.id.calendar)
         {
             Intent intent = new Intent(getActivity(), WebActivity.class);
             intent.putExtra("url",url.get(tag).toString());
