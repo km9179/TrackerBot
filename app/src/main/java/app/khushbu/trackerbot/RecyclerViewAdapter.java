@@ -72,7 +72,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             holder.imageView.setImageResource(Ongoing.ongoingContestData.get(position).getImgId());
             holder.textView1.setText(Ongoing.ongoingContestData.get(position).getEvent_names());
-            String startTime = time.getCurrentTimeStamp();
+            String startTime = time.getCurrentTimeStamp("UTC");
             startTime = startTime.substring(0, 10) + " " + startTime.substring(11, startTime.length());
             String endTime = Ongoing.ongoingContestData.get(position).getEvent_end_time();
             endTime = endTime.substring(0, 10) + " " + endTime.substring(11, endTime.length());
@@ -106,9 +106,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.imageView.setImageResource(Upcoming.upcomingContestData.get(position).getImgId());
             holder.textView1.setText(Upcoming.upcomingContestData.get(position).getEvent_names());
             String z = Upcoming.upcomingContestData.get(position).getEvent_start_time();
-            holder.textView2.setText("Start:\n"+z);
-            String zz= Upcoming.upcomingContestData.get(position).getEvent_end_time();
-            holder.textView3.setText("End:\n"+zz);
+            z = new Time().convertTime(z);
+            holder.textView2.setText(z);
 
 
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
@@ -143,9 +142,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.imageView.setImageResource(Fav.favContestData.get(position).getImgId());
             holder.textView1.setText(Fav.favContestData.get(position).getEvent_names());
             String z = Fav.favContestData.get(position).getEvent_start_time();
-            holder.textView2.setText("Start:\n"+z);
-            String zz= Fav.favContestData.get(position).getEvent_end_time();
-            holder.textView3.setText("End:\n"+zz);
+            holder.textView2.setText(z);
 
 
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
@@ -167,7 +164,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             if(holder.cdt != null){
                 holder.cdt.cancel();
             }
-            String startTime = new Time().getCurrentTimeStamp();
+            String startTime = new Time().getCurrentTimeStamp("UTC");
             startTime = startTime.substring(0, 10) + " " + startTime.substring(11, startTime.length());
             String endTime = ALL_CONTEST_Activity.allContestList.get(position).getEvent_end_time();
             endTime = endTime.substring(0, 10) + " " + endTime.substring(11, endTime.length());
@@ -195,7 +192,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
-        TextView textView1, textView2,siteName,textView3;
+        TextView textView1, textView2,siteName;
         ImageView imageView;
         View v;
         CardView cardView;
@@ -206,7 +203,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             v = itemView;
             textView1 = (TextView) itemView.findViewById(R.id.name);
             textView2 = (TextView) itemView.findViewById(R.id.time);
-            textView3 = (TextView) itemView.findViewById(R.id.end);
             siteName = (TextView) itemView.findViewById(R.id.siteName);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             cardView = (CardView) itemView.findViewById(R.id.cardView);

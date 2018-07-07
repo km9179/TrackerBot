@@ -20,6 +20,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".MainActivity"
@@ -50,7 +51,7 @@
                 android:value="app.khushbu.trackerbot.MainActivity" />
         </activity>
         <activity android:name=".WebActivity" />
-        <activity android:name=".ALL_CONTEST_Activity"></activity>
+        <activity android:name=".ALL_CONTEST_Activity" />
     </application>
 
 </manifest>
