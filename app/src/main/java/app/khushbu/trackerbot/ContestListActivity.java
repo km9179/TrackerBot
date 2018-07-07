@@ -19,6 +19,9 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 
 public class ContestListActivity extends AppCompatActivity {
 
@@ -72,6 +75,7 @@ public class ContestListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+        //getSupportActionBar().setTitle();
         textToolbar=(TextView)toolbar.findViewById(R.id.textToolbar);
         toolbarCheckbox = (CheckBox)toolbar.findViewById(R.id.toolbarCheckBox);
         toolbarCheckbox.setChecked(false);
@@ -128,7 +132,14 @@ public class ContestListActivity extends AppCompatActivity {
 
         Intent intent=getIntent();
         siteKey=intent.getIntExtra("id",-1);
+        Map names=new TreeMap();
+        names.put(1,"CodeForces");
+        names.put(2,"Codechef");
+        names.put(12,"Topcoder");
+        names.put(63,"Hackerrank");
+        names.put(73,"Hackerearth");
 
+        getSupportActionBar().setTitle(names.get(siteKey).toString());
 
     }
 
