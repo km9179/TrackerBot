@@ -1,6 +1,7 @@
 package app.khushbu.trackerbot;
 
 import android.util.Log;
+import android.view.View;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -119,8 +120,11 @@ public class DownloadClass {
                     try {
                         if (frag == 2)
                             Upcoming.adapter.notifyDataSetChanged();
-                        else
+                        else {
+                            
                             Ongoing.adapter.notifyDataSetChanged();
+
+                        }
                     }
                     catch (Exception e){
                         e.printStackTrace();

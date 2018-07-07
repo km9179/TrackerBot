@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -23,7 +24,7 @@ public class Ongoing extends Fragment implements RecyclerViewAdapter.ItemClickLi
     public static ArrayList<ContestData>ongoingContestData =new ArrayList<>();
     public static RecyclerViewAdapter adapter;
     //public static RequestQueue requestQueue;
-
+    //public static TextView error_message;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +44,8 @@ public class Ongoing extends Fragment implements RecyclerViewAdapter.ItemClickLi
 
         final View rootView=inflater.inflate(R.layout.ongoing,container,false);
 
-        RecyclerView recyclerView=(RecyclerView)rootView.findViewById(R.id.ongoingRecyclerView);
+        RecyclerView recyclerView =(RecyclerView)rootView.findViewById(R.id.ongoingRecyclerView);
+        //error_message = (TextView)rootView.findViewById(R.id.error_message);
         adapter=new RecyclerViewAdapter(getActivity(),1);
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -65,6 +67,7 @@ public class Ongoing extends Fragment implements RecyclerViewAdapter.ItemClickLi
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+
 
         return rootView;
     }
