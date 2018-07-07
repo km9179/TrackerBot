@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#726f76"
+    android:background="@drawable/keyboard"
     tools:context=".ALL_CONTEST_Activity">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/all_contest_RecyclerView"
