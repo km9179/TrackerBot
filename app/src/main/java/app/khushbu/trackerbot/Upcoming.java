@@ -147,6 +147,7 @@ public class Upcoming extends Fragment implements RecyclerViewAdapter.ItemClickL
 
             Intent intent=new Intent(getContext(),WebActivity.class);
             intent.putExtra("url",upcomingContestData.get(position).getEvent_url());
+            intent.putExtra("type",1);
             startActivity(intent);
 
         }

@@ -2,6 +2,7 @@ package app.khushbu.trackerbot;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Point;
 import android.net.http.SslError;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -29,6 +30,13 @@ public class WebActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
+
+        Intent intent=getIntent();
+
+        if(intent.getIntExtra("type",-1) == 2){
+            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
+        }
 
         contestSite = (WebView)findViewById(R.id.contestSite);
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh_layout);
@@ -59,7 +67,7 @@ public class WebActivity extends AppCompatActivity {
 
         contestSite.getSettings().setBuiltInZoomControls(true);
 
-        Intent intent=getIntent();
+
 
         String url=intent.getStringExtra("url");
 

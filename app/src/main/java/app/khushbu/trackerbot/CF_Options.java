@@ -63,6 +63,7 @@ public class CF_Options extends android.app.DialogFragment implements View.OnCli
         {
             Intent intent = new Intent(getActivity(), WebActivity.class);
             intent.putExtra("url",url.get(tag).toString());
+            intent.putExtra("type",2);
             startActivity(intent);
             dismiss();
 

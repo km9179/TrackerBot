@@ -90,6 +90,7 @@ public class Ongoing extends Fragment implements RecyclerViewAdapter.ItemClickLi
         });
         Intent intent=new Intent(getContext(),WebActivity.class);
         intent.putExtra("url",ongoingContestData.get(position).getEvent_url());
+        intent.putExtra("type",1);
         startActivity(intent);
     }
 }
