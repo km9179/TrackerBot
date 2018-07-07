@@ -121,7 +121,7 @@ public class DownloadClass {
                         if (frag == 2)
                             Upcoming.adapter.notifyDataSetChanged();
                         else {
-                            
+
                             Ongoing.adapter.notifyDataSetChanged();
 
                         }
