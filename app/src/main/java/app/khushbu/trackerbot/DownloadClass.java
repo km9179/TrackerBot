@@ -89,7 +89,7 @@ public class DownloadClass {
                         String eventEndTime=jsonObject.getString("end");
                         int eventDuration=jsonObject.getInt("duration");
 
-                        String curTime=time.getCurrentTimeStamp();
+                        String curTime=time.getCurrentTimeStamp("UTC");
 
                         if(frag==2) {
                             if (curTime.compareTo(eventStartTime) < 0) {
@@ -186,7 +186,7 @@ public class DownloadClass {
                         siteName = siteName.split("\\.")[0];
                         siteName = siteName.substring(0,1).toUpperCase()+siteName.substring(1,siteName.length());
 
-                        String curTime=time.getCurrentTimeStamp();
+                        String curTime=time.getCurrentTimeStamp("UTC");
 
                         if (curTime.compareTo(eventEndTime) < 0) {
                             if(curTime.compareTo(eventStartTime) >= 0) {

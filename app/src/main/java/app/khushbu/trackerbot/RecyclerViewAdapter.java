@@ -72,7 +72,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             holder.imageView.setImageResource(Ongoing.ongoingContestData.get(position).getImgId());
             holder.textView1.setText(Ongoing.ongoingContestData.get(position).getEvent_names());
-            String startTime = time.getCurrentTimeStamp();
+            String startTime = time.getCurrentTimeStamp("UTC");
             startTime = startTime.substring(0, 10) + " " + startTime.substring(11, startTime.length());
             String endTime = Ongoing.ongoingContestData.get(position).getEvent_end_time();
             endTime = endTime.substring(0, 10) + " " + endTime.substring(11, endTime.length());
@@ -106,6 +106,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.imageView.setImageResource(Upcoming.upcomingContestData.get(position).getImgId());
             holder.textView1.setText(Upcoming.upcomingContestData.get(position).getEvent_names());
             String z = Upcoming.upcomingContestData.get(position).getEvent_start_time();
+            z = new Time().convertTime(z);
             holder.textView2.setText(z);
 
 
@@ -163,7 +164,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             if(holder.cdt != null){
                 holder.cdt.cancel();
             }
-            String startTime = new Time().getCurrentTimeStamp();
+            String startTime = new Time().getCurrentTimeStamp("UTC");
             startTime = startTime.substring(0, 10) + " " + startTime.substring(11, startTime.length());
             String endTime = ALL_CONTEST_Activity.allContestList.get(position).getEvent_end_time();
             endTime = endTime.substring(0, 10) + " " + endTime.substring(11, endTime.length());

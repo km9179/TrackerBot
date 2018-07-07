@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.TreeMap;
 
 import static android.content.Context.CONNECTIVITY_SERVICE;
@@ -38,6 +40,7 @@ import static app.khushbu.trackerbot.CF_Options.tag;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
 
+    private static int SPLASH_TIME_OUT = 4000;
     private DrawerLayout mDrawerLayout;
     ContentValues values=new ContentValues();
     static Database.Helper helper;
@@ -50,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.home_screen_layout);
         new InternetCheck(this).isInternetConnectionAvailable(new InternetCheck.InternetCheckListener() {
 
             @Override
@@ -89,7 +92,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         */
 
-        setContentView(R.layout.home_screen_layout);
+
+
+
+
+
 
         imgId = new TreeMap();
         imgId.put(1, R.drawable.codeforces_logo);
