@@ -106,7 +106,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.imageView.setImageResource(Upcoming.upcomingContestData.get(position).getImgId());
             holder.textView1.setText(Upcoming.upcomingContestData.get(position).getEvent_names());
             String z = Upcoming.upcomingContestData.get(position).getEvent_start_time();
-            holder.textView2.setText(z);
+            holder.textView2.setText("Start:\n"+z);
+            String zz= Upcoming.upcomingContestData.get(position).getEvent_end_time();
+            holder.textView3.setText("End:\n"+zz);
 
 
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
@@ -141,7 +143,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.imageView.setImageResource(Fav.favContestData.get(position).getImgId());
             holder.textView1.setText(Fav.favContestData.get(position).getEvent_names());
             String z = Fav.favContestData.get(position).getEvent_start_time();
-            holder.textView2.setText(z);
+            holder.textView2.setText("Start:\n"+z);
+            String zz= Fav.favContestData.get(position).getEvent_end_time();
+            holder.textView3.setText("End:\n"+zz);
 
 
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
@@ -191,7 +195,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
-        TextView textView1, textView2,siteName;
+        TextView textView1, textView2,siteName,textView3;
         ImageView imageView;
         View v;
         CardView cardView;
@@ -202,6 +206,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             v = itemView;
             textView1 = (TextView) itemView.findViewById(R.id.name);
             textView2 = (TextView) itemView.findViewById(R.id.time);
+            textView3 = (TextView) itemView.findViewById(R.id.end);
             siteName = (TextView) itemView.findViewById(R.id.siteName);
             imageView = (ImageView) itemView.findViewById(R.id.imageView);
             cardView = (CardView) itemView.findViewById(R.id.cardView);
