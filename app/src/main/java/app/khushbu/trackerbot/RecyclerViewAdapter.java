@@ -149,8 +149,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             z = new Time().convertTime(z);
             String zz = Fav.favContestData.get(position).getEvent_end_time();
             zz = new Time().convertTime(zz);
-            holder.textView2.setText("START: "+z);
-            holder.textView3.setText("END: "+zz);
+            holder.textView2.setText("Start at: "+z.substring(11,19)+"\nStart on: "+z.substring(0,10));
+            holder.textView3.setText("End at: "+zz.substring(11,19)+"\nEnd on: "+zz.substring(0,10));
+
 
 
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
