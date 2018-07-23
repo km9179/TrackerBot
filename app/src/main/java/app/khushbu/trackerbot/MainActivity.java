@@ -5,9 +5,11 @@ import android.app.FragmentManager;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +29,7 @@ import android.view.Window;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -206,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.x, menu);
-        return true;
+        return false;
     }
 
     @Override
@@ -242,7 +245,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } */
         if (id == R.id.nav_share) {
+            ApplicationInfo app = getApplicationContext().getApplicationInfo();
+            String filePath = app.sourceDir;
+            Intent intent = new Intent(Intent.ACTION_SEND);
 
+            intent.setType("*/*");
+
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filePath)));
+            startActivity(Intent.createChooser(intent,"Share app using"));
         }
         else if(id==R.id.nav_contact)
         {
