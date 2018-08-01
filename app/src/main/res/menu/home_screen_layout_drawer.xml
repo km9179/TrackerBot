@@ -26,7 +26,7 @@
             android:title="Favourites" />
         <item
             android:id="@+id/nav_all_ongoing_contest"
-            android:icon="@drawable/ic_star"
+            android:icon="@drawable/ic_text_format_black_24dp"
             android:title="All Ongoing Contest" />
     </group>
 
