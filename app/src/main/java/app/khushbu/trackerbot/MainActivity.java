@@ -30,7 +30,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Map;
@@ -245,14 +249,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } */
         if (id == R.id.nav_share) {
-            ApplicationInfo app = getApplicationContext().getApplicationInfo();
-            String filePath = app.sourceDir;
-            Intent intent = new Intent(Intent.ACTION_SEND);
-
-            intent.setType("*/*");
-
-            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(filePath)));
-            startActivity(Intent.createChooser(intent,"Share app using"));
+            shareApplication();
         }
         else if(id==R.id.nav_contact)
         {
@@ -279,6 +276,54 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    private void shareApplication() {
+        ApplicationInfo app = getApplicationContext().getApplicationInfo();
+        String filePath = app.sourceDir;
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+
+        // MIME of .apk is "application/vnd.android.package-archive".
+        // but Bluetooth does not accept this. Let's use "*/*" instead.
+        intent.setType("*/*");
+
+        // Append file and send Intent
+        File originalApk = new File(filePath);
+
+        try {
+            //Make new directory in new location
+            File tempFile = new File(getExternalCacheDir() + "/ExtractedApk");
+            //If directory doesn't exists create new
+            if (!tempFile.isDirectory())
+                if (!tempFile.mkdirs())
+                    return;
+            //Get application's name and convert to lowercase
+            tempFile = new File(tempFile.getPath() + "/" + getString(app.labelRes).replace(" ","").toLowerCase() + ".apk");
+            //If file doesn't exists create new
+            if (!tempFile.exists()) {
+                if (!tempFile.createNewFile()) {
+                    return;
+                }
+            }
+            //Copy file to new location
+            InputStream in = new FileInputStream(originalApk);
+            OutputStream out = new FileOutputStream(tempFile);
+
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            in.close();
+            out.close();
+            System.out.println("File copied.");
+            //Open share dialog
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(tempFile));
+            startActivity(Intent.createChooser(intent, "Share app via"));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
